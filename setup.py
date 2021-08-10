@@ -1,3 +1,3 @@
 from setuptools import setup
 
-setup(name="econ_template", version="0.0.1")
+setup(name="data_analysis_cps", version="0.0.1")
