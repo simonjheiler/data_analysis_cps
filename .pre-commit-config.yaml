@@ -15,8 +15,8 @@ repos:
         types: [text]
       - id: check-merge-conflict
       - id: check-json
-      - id: pretty-format-json
-        args: [--autofix, --no-sort-keys, --no-ensure-ascii]
+#      - id: pretty-format-json
+#        args: [--autofix, --no-sort-keys, --no-ensure-ascii]
       - id: trailing-whitespace
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.23.3
