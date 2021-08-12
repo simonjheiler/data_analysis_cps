@@ -3,37 +3,132 @@ import pytask
 from src.config import BLD
 from src.config import SRC
 
-# data = SRC / "original_data" / "ajrcomment.dta"
-# prod = BLD / "data" / "ajrcomment_all.csv"
-#
-#
-# @pytask.mark.r([str(x.resolve()) for x in [data, prod]])
-# @pytask.mark.depends_on(["add_variables.r", data])
-# @pytask.mark.produces(prod)
-# def task_ajr_comment_data():
-#     pass
+data = SRC / "original_data" / "ajrcomment.dta"
+prod = BLD / "data" / "ajrcomment_all.csv"
 
 
-# datasets = [
-#     "SCFP1989.csv",
-#     "SCFP1992.csv",
-#     "SCFP1995.csv",
-#     "SCFP1998.csv",
-#     "SCFP2001.csv",
-#     "SCFP2004.csv",
-#     "SCFP2007.csv",
-#     "SCFP2010.csv",
-#     "SCFP2013.csv",
-#     "SCFP2016.csv",
-#     "SCFP2019.csv",
-# ]
-#
-# data = [SRC / "original_data" / "extracts" / x for x in datasets]
-# prod = BLD / "data" / "scf_extract.csv"
-#
-#
-# @pytask.mark.r([str(x.resolve()) for x in data + [prod]])
-# @pytask.mark.depends_on(["get_assets_over_income.r"] + data)
-# @pytask.mark.produces(prod)
-def task_get_assets_over_income():
+@pytask.mark.produces(prod)
+def task_ajr_comment_data():
     pass
+
+
+# # define specs directories as nodes
+# cps_specs_monthly = abs_rel_paths("IN_DATA_SPECS", "cps", "specs", "monthly")["rel"]
+# cps_specs_monthly = ctx.path.make_node(cps_specs_monthly)
+#
+# # extract and format CPS basic monthly data
+# for node in cps_specs_monthly.ant_glob("cpsb_*.json"):
+#
+#     data_specs = node.read_json()
+#     dataset = os.path.basename(str(node))
+#
+#     in_name = data_specs["in_name"]
+#     out_name = data_specs["out_name"]
+#     read_file = data_specs["read_file"]
+#     data_dict = data_specs["data_dict"]
+#     variables = [data_specs["var_dict"][key] for key in data_specs["var_dict"]]
+#     variables += data_specs["identifier"]
+#
+#     append = ["monthly", in_name, out_name, read_file, data_dict]
+#     append += variables
+#
+#     ctx(
+#         features="run_do_script",
+#         source=ctx.path_to(ctx, "IN_DATA_MGMT", "get_data_cps.do"),
+#         deps=[
+#             ctx.path_to(ctx, "IN_DATA_SPECS", "cps", "specs", "monthly", dataset),
+#             ctx.path_to(ctx, "IN_DATA_SPECS", "cps_monthly", data_dict),
+#             ctx.path_to(ctx, "IN_DATA_MGMT", "cps_monthly", read_file),
+#         ],
+#         target=[
+#             ctx.path_to(
+#                 ctx, "OUT_DATA", "cps_monthly", "raw", out_name + "_raw.csv"
+#             ),
+#             ctx.path_to(
+#                 ctx, "OUT_DATA", "cps_monthly", "raw", "log", out_name + ".log"
+#             ),
+#         ],
+#         append=append,
+#     )
+#
+#     ctx.add_group()
+#
+# for node in cps_specs_monthly.ant_glob("cpsb_*.json"):
+#
+#     data_specs = node.read_json()
+#     dataset = os.path.splitext(os.path.basename(str(node)))[0]
+#
+#     in_name = data_specs["in_name"]
+#     out_name = data_specs["out_name"]
+#
+#     ctx(
+#         features="run_py_script",
+#         source="format_data_cps_monthly.py",
+#         deps=[
+#             ctx.path_to(
+#                 ctx, "OUT_DATA", "cps_monthly", "raw", out_name + "_raw.csv"
+#             ),
+#             ctx.path_to(ctx, "IN_DATA", "misc", "cps_us_state_codes.csv"),
+#         ],
+#         target=ctx.path_to(ctx, "OUT_DATA", "cps_monthly", out_name + ".csv"),
+#         name="format_data_cps_monthly",
+#         append=dataset,
+#     )
+#
+# # extract and format CPS March supplement data
+# for node in cps_specs_yearly.ant_glob("cpsy_*.json"):
+#
+#     data_specs = node.read_json()
+#     dataset = os.path.basename(str(node))
+#
+#     in_name = data_specs["in_name"]
+#     out_name = data_specs["out_name"]
+#     read_file = data_specs["read_file"]
+#     data_dict = data_specs["data_dict"]
+#     variables = [data_specs["var_dict"][key] for key in data_specs["var_dict"]]
+#
+#     append = ["yearly", in_name, out_name, read_file, data_dict]
+#     append += variables
+#
+#     ctx(
+#         features="run_do_script",
+#         source=ctx.path_to(ctx, "IN_DATA_MGMT", "get_data_cps.do"),
+#         deps=[
+#             ctx.path_to(ctx, "IN_DATA_SPECS", "cps", "specs", "yearly", dataset),
+#             ctx.path_to(ctx, "IN_DATA_SPECS", "cps_yearly", data_dict),
+#             ctx.path_to(ctx, "IN_DATA_MGMT", "cps_yearly", read_file),
+#         ],
+#         target=[
+#             ctx.path_to(
+#                 ctx, "OUT_DATA", "cps_yearly", "raw", out_name + "_raw.csv"
+#             ),
+#             ctx.path_to(
+#                 ctx, "OUT_DATA", "cps_yearly", "raw", "log", out_name + ".log"
+#             ),
+#         ],
+#         append=append,
+#     )
+#
+#     ctx.add_group()
+#
+# for node in cps_specs_yearly.ant_glob("cpsy_*.json"):
+#
+#     data_specs = node.read_json()
+#     dataset = os.path.splitext(os.path.basename(str(node)))[0]
+#
+#     in_name = data_specs["in_name"]
+#     out_name = data_specs["out_name"]
+#
+#     ctx(
+#         features="run_py_script",
+#         source="format_data_cps_yearly.py",
+#         deps=[
+#             ctx.path_to(
+#                 ctx, "OUT_DATA", "cps_yearly", "raw", out_name + "_raw.csv"
+#             ),
+#             ctx.path_to(ctx, "IN_DATA", "misc", "cps_us_state_codes.csv"),
+#         ],
+#         target=ctx.path_to(ctx, "OUT_DATA", "cps_yearly", out_name + ".csv"),
+#         name="format_data_cps_yearly",
+#         append=dataset,
+#     )

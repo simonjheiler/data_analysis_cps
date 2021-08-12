@@ -1,0 +1,21 @@
+{
+  "in_name": "cpst_2005-02",
+  "out_name": "cpst_2005-02",
+  "read_file": "cpst_2005-02.do",
+  "data_dict": "cpst_2005-02.dct",
+  "var_dict": {
+    "year": "hryear4",
+    "state": "gestcen",
+    "sex": "pesex",
+    "age": "prtage",
+    "education": "peeduca",
+    "labor_force_status": "pemlr",
+    "race": "ptdtrace",
+    "marital_status": "pemaritl",
+    "citizenship_status": "prcitshp",
+    "tenure": "prst1tn",
+    "earnings_weekly": "prernwa",
+    "hours_worked": "pesce5o",
+    "weight": "pwsswgt"
+  }
+}

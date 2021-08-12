@@ -1,0 +1,32 @@
+{
+  "in_name": "jan14pub",
+  "out_name": "cpsb_2014-01",
+  "read_file": "cpsb_2014-01.do",
+  "data_dict": "cpsb_2014-01.dct",
+  "var_dict": {
+    "year": "hryear4",
+    "month": "hrmonth",
+    "month_in_sample": "hrmis",
+    "state": "gestfips",
+    "sex": "pesex",
+    "age": "prtage",
+    "education": "peeduca",
+    "labor_force_status": "pemlr",
+    "race": "ptdtrace",
+    "marital_status": "pemaritl",
+    "citizenship_status": "prcitshp",
+    "spouse_id": "pespouse",
+    "n_children": "prnmchld",
+    "earnings_weekly": "prernwa",
+    "hourly_rate": "prernhly",
+    "hours_worked": "peernhro",
+    "weight_long": "pwlgwgt",
+    "weight_personal": "pwsswgt",
+    "weight_bls": "pwcmpwgt"
+  },
+  "identifier": [
+    "hrhhid",
+    "hrhhid2",
+    "pulineno"
+  ]
+}

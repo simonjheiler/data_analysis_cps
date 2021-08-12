@@ -1,0 +1,71 @@
+{
+  "basic_monthly": {
+    "date_start": "1989-01",
+    "date_end": "2020-06",
+    "prefix": "cpsb",
+    "variables": [
+      "year",
+      "month",
+      "month_in_sample",
+      "state",
+      "sex",
+      "age",
+      "education",
+      "grade_completed",
+      "race",
+      "marital_status",
+      "labor_force_status",
+      "citizenship_status",
+      "spouse_id",
+      "n_children",
+      "earnings_weekly",
+      "hourly_rate",
+      "hours_worked",
+      "weight_long",
+      "weight_personal",
+      "weight_bls"
+    ]
+  },
+  "supplement_asec": {
+    "date_start": "1989",
+    "date_end": "2018",
+    "prefix": "cpsa",
+    "variables": [
+      "year",
+      "state",
+      "sex",
+      "age",
+      "education",
+      "grade_completed",
+      "race",
+      "marital_status",
+      "labor_force_status",
+      "citizenship_status",
+      "earnings_weekly",
+      "hours_worked",
+      "weight_personal",
+      "weight_earnings",
+      "weight_supplement"
+    ]
+  },
+  "supplement_tenure": {
+    "date_start": "2005-02",
+    "date_end": "2006-01",
+    "prefix": "cpst",
+    "variables": [
+      "year",
+      "state",
+      "sex",
+      "age",
+      "education",
+      "race",
+      "marital_status",
+      "labor_force_status",
+      "citizenship_status",
+      "tenure",
+      "earnings_weekly",
+      "hours_worked",
+      "weight"
+    ]
+  }
+}
