@@ -14,6 +14,8 @@ library(plyr)
 library(dplyr)
 library(spatstat)
 library(tidyr)
+library(ggeffects)
+
 
 #####################################################
 # PARAMETERS
@@ -39,6 +41,7 @@ for(infile in args[-length(args)]){
 vars <- c("prtage", "peeduca", "pemlr", "prst1tn", "prernwa")
 df <- drop_na(df, any_of(vars))
 df <- df[df$prernwa > 0,]
+df <- df[df$prst1tn <= 40,]
 ## drop observations out of scope and with missing values
 
 
@@ -79,7 +82,48 @@ df$education_reduced <- revalue(df$education_reduced, c(
 ))
 df$education_reduced <- ordered(df$education_reduced, levels = c("low", "medium", "high"))
 
+df$marital_status <- df$pemaritl
+df$marital_status <- revalue(df$marital_status, c(
+  "MARRIED - SPOUSE PRESENT"="married",
+  "MARRIED - SPOUSE ABSENT"="married",
+  "WIDOWED"="not married",
+  "DIVORCED"="not married",
+  "SEPARATED"="not married",
+  "NEVER MARRIED"="not married"
+))
+df$marital_status <- factor(df$marital_status)
+
+df$citizenship_status <- revalue(df$prcitshp, c(
+  "NATIVE, BORN IN THE UNITED"="yes",
+  "FOREIGN BORN, U.S. CITIZEN BY"="yes",
+  "FOREIGN BORN, NOT A CITIZEN OF"="no",
+  "NATIVE, BORN ABROAD OF"="yes",
+  "NATIVE, BORN IN PUERTO RICO OR"="yes"
+))
+df$citizenship_status <- factor(df$citizenship_status)
+
+df$race <- revalue(df$ptdtrace, c(
+  "White Only"="white",
+  "American Indian, Alaskan"="other",
+  "Black Only"="black",
+  "Asian Only"="other",
+  "W-B-AI"="other",
+  "White-AI"="other",
+  "Black-AI"="other",
+  "White-Asian"="other",
+  "Hawaiian/Pacific Islander Only"="other",
+  "Asian-HP"="other",
+  "White-Hawaiian"="other",
+  "White-Black"="other",
+  "2 or 3 Races"="other",
+  "W-A-HP"="other",
+  "4 or 5 Races"="other",
+  "W-B-A"="other"
+))
+df$race <- factor(df$race)
+
 df$log_earnings <- log(df$prernwa)
 
-
-model_tenure <- lm(log_earnings ~ education_reduced * tenure_group + age_group, data=df)
+model_tenure <- lm(log_earnings ~ education_reduced * tenure_group + age_group + marital_status + citizenship_status + race, data=df)
+returns <- ggeffect(model_tenure, terms = c("tenure_group", "education_reduced"))
+plot(returns)
