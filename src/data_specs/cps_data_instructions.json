@@ -49,8 +49,8 @@
     ]
   },
   "supplement_tenure": {
-    "date_start": "2005-02",
-    "date_end": "2006-01",
+    "date_start": "2004-01",
+    "date_end": "2004-01",
     "prefix": "cpst",
     "variables": [
       "year",

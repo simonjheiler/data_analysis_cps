@@ -1,8 +1,8 @@
 {
-  "in_name": "cpst_2005-02",
-  "out_name": "cpst_2005-02",
-  "read_file": "cpst_2005-02.do",
-  "data_dict": "cpst_2005-02.dct",
+  "in_name": "cpst_2004-01",
+  "out_name": "cpst_2004-01",
+  "read_file": "cpst_2004-01.do",
+  "data_dict": "cpst_2004-01.dct",
   "var_dict": {
     "year": "hryear4",
     "state": "gestcen",
