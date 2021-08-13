@@ -53,7 +53,7 @@ tenure_labels <- c("less than 5 years", "5 to 10", "10 to 15", "15 to 20", "20 t
 
 
 df$age <- df$prtage
-df$age <- revalue(df$age, "-1"=NaN)
+# df$age <- revalue(df$age, "-1"=NaN)
 df$age <- as.numeric(df$prtage)
 
 df$age_group <- cut(df$age, age_thresholds, labels = age_labels)
