@@ -6,11 +6,14 @@ local out_file `3'
 local data_dict `4'
 local variables `5'
 
+display `"`variables'"'
+display `"`data_dict'"'
+
 *capture log using `log_file', replace
 
 /*------------------------------------------------
   developed by Jean Roth
-  edited by Simon Heiler Thu Jul 02 18:00:00 CEST 2020
+  edited by Simon Heiler Fri Aug 13 18:00:00 CEST 2021
   NOTE:  This program is distributed under the GNU GPL.
   See end of this file and http://www.gnu.org/licenses/ for details.
 ----------------------------------------------- */

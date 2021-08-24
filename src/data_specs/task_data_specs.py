@@ -3,9 +3,9 @@
 
 """
 import json
+import os
 import re
 from datetime import datetime
-from os import listdir
 
 import pytask
 
@@ -27,7 +27,9 @@ for survey in ["basic_monthly", "supplement_tenure"]:
     prefixes[survey] = cps_data_instructions[survey]["prefix"]
 
     # filter selected files from list of all files
-    datasets_all = list(listdir(SRC / "original_data" / survey))
+    datasets_all = [
+        f for f in os.listdir(SRC / "original_data" / survey) if f.endswith(".zip")
+    ]
     datasets_all = [re.sub(r"cps\w_", "", f) for f in datasets_all]
     datasets_all = [re.sub(".zip", "", f) for f in datasets_all]
     datasets_all = [datetime.strptime(f, "%Y-%m") for f in datasets_all]

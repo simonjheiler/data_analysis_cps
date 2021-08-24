@@ -5,7 +5,7 @@ The file "esimate_returns.r" estimates returns to tenure by age and education fr
 # args <- commandArgs(trailingOnly=TRUE)
 
 args <- c(
-   'C:/Users/simon/Documents/sync_uni/Projects/data_analysis_cps/bld/out/data/supplement_tenure/cpst_2004-01.csv',
+   'C:/Users/simon/Documents/sync_uni/Projects/data_analysis_cps/bld/out/data/supplement_tenure.csv',
    'C:/Users/simon/Documents/sync_uni/Projects/data_analysis_cps/bld/out/results/cps_returns_to_tenure.csv'
 )
 
@@ -58,7 +58,7 @@ df$age <- as.numeric(df$prtage)
 
 df$age_group <- cut(df$age, age_thresholds, labels = age_labels)
 
-df$tenure_group <- cut(df$prst1tn, tenure_thresholds, labels = tenure_labels)
+df$tenure_group <- cut(df$tenure, tenure_thresholds, labels = tenure_labels)
 
 df$education_reduced <- df$peeduca
 df$education_reduced <- revalue(df$education_reduced, c(

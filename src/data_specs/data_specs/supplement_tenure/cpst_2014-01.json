@@ -1,8 +1,8 @@
 {
-  "in_name": "cpst_2004-01",
-  "out_name": "cpst_2004-01",
-  "read_file": "cpst_2004-01.do",
-  "data_dict": "cpst_2004-01.dct",
+  "in_name": "cpst_2014-01",
+  "out_name": "cpst_2014-01",
+  "read_file": "cpst_2014-01.do",
+  "data_dict": "cpst_2014-01.dct",
   "var_dict": {
     "id": "hrhhid",
     "year": "hryear4",
@@ -14,9 +14,9 @@
     "race": "ptdtrace",
     "marital_status": "pemaritl",
     "citizenship_status": "prcitshp",
-    "tenure": "prst1tn",
+    "tenure": "ptst1tn",
     "earnings_weekly": "prernwa",
-    "hours_worked": "pesce5o",
+    "hours_worked": "ptsce5o",
     "weight": "pwsswgt"
   }
 }

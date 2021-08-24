@@ -35,7 +35,7 @@ for spec_path in in_specs:
         "in_file_name": in_file_name,
         "path_out": BLD / "out" / "data" / survey_name,
         "result": BLD / "out" / "data" / survey_name / f"{tmp['out_name']}.csv",
-        "variables": list(tmp["var_dict"].values()),
+        "variables": " ".join(list(tmp["var_dict"].values())),
     }
     stata_instructions.append(tmp_instructions)
 
@@ -54,7 +54,7 @@ print("Test")
                     *s["deps"],
                     s["path_out"],
                     s["result"],
-                    *s["variables"],
+                    s["variables"],
                 ]
             ],
             [s["do"], *s["deps"]],
