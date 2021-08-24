@@ -52,22 +52,18 @@ education_reduced_cat = {
     "PROFESSIONAL SCHOOL DEG (EX: MD,": "Bachelor's degree and higher",
     "PROFESSIONAL SCHOOL DEG (EX: MD, DDS, DVM)": "Bachelor's degree and higher",
     "DOCTORATE DEGREE (EX: PhD, EdD)": "Bachelor's degree and higher",
-}
-
-labor_force_status_reduced_cat = {
-    "NIU": "not in universe",
-    "EMPLOYED-AT WORK": "employed",
-    "EMPLOYED-ABSENT": "employed",
-    "UNEMPLOYED-ON LAYOFF": "unemployed",
-    "UNEMPLOYED-LOOKING": "unemployed",
-    "NOT IN LABOR FORCE-RETIRED": "not in labor force",
-    "NOT IN LABOR FORCE-DISABLED": "not in labor force",
-    "NOT IN LABOR FORCE-OTHER": "not in labor force",
-    "NOT IN LABOR FORCE-UNAVAILABLE": "not in labor force",
-    "NOT IN LABOR FORCE-WORKING W/O PAY LESS": "not in labor force",
+    "BACHELOR'S DEGREE": "Bachelor's degree and higher",
+    "ASSOCIATE DEGREE-OCCUPATIONAL/": "Some College or Associate Degree",
+    "PROFESSIONAL SCHOOL DEG": "Bachelor's degree and higher",
+    "DOCTORATE DEGREE": "Bachelor's degree and higher",
+    "BACHELOR'S DEGREE (EX: BA,": "Bachelor's degree and higher",
+    "DOCTORATE DEGREE (EX: PhD,": "Bachelor's degree and higher",
+    "PROFESSIONAL SCHOOL DEG (EX:": "Bachelor's degree and higher",
+    "MASTER'S DEGREE (EX: MA, MS, MEng,": "Bachelor's degree and higher",
 }
 
 race_reduced_cat = {
+    "0": np.nan,
     "White": "white",
     "White only": "white",
     "White Only": "white",
@@ -122,7 +118,23 @@ race_reduced_cat = {
     "Other 4 and 5 Race Combinations": "other",
     "AMERICAN INDIAN, ALEUT, ESKIMO": "other",
     "ASIAN OR PACIFIC ISLANDER": "other",
+    "American Indian, Alaskan": "other",
+    "Hawaiian/Pacific Islander": "other",
 }
+
+labor_force_status_reduced_cat = {
+    "NIU": "not in universe",
+    "EMPLOYED-AT WORK": "employed",
+    "EMPLOYED-ABSENT": "employed",
+    "UNEMPLOYED-ON LAYOFF": "unemployed",
+    "UNEMPLOYED-LOOKING": "unemployed",
+    "NOT IN LABOR FORCE-RETIRED": "not in labor force",
+    "NOT IN LABOR FORCE-DISABLED": "not in labor force",
+    "NOT IN LABOR FORCE-OTHER": "not in labor force",
+    "NOT IN LABOR FORCE-UNAVAILABLE": "not in labor force",
+    "NOT IN LABOR FORCE-WORKING W/O PAY LESS": "not in labor force",
+}
+
 
 married_reduced_cat = {
     "Married - AF spouse present": "married",
@@ -147,11 +159,18 @@ married_reduced_cat = {
 }
 
 citship_reduced_cat = {
-    "NATIVE, BORN IN THE UNITED": "yes",
-    "FOREIGN BORN, NOT A CITIZEN OF": "no",
-    "FOREIGN BORN, U.S. CITIZEN BY": "yes",
-    "NATIVE, BORN ABROAD OF AMERICAN": "yes",
-    "NATIVE, BORN IN PUERTO RICO OR": "yes",
+    "NATIVE, BORN IN THE UNITED": "citizen",
+    "NATIVE, BORN IN THE UNITED STATES": "citizen",
+    "NATIVE, BORN ABROAD OF": "citizen",
+    "NATIVE, BORN ABROAD OF AMERICAN": "citizen",
+    "NATIVE, BORN ABROAD OF AMERICAN PARENT OR PARENTS": "citizen",
+    "NATIVE, BORN IN PUERTO RICO OR": "citizen",
+    "NATIVE, BORN IN PUERTO RICO OR OTHER U.S. ISLAND AREAS": "citizen",
+    "FOREIGN BORN, U.S. CITIZEN BY": "citizen",
+    "FOREIGN BORN, U.S. CITIZEN BY NATURALIZATION": "citizen",
+    "FOREIGN BORN, NOT A CITIZEN OF": "non-citizen",
+    "FOREIGN BORN, NOT A CITIZEN OF THE": "non-citizen",
+    "FOREIGN BORN, NOT A CITIZEN OF THE UNITED STATES": "non-citizen",
 }
 
 age_thresholds = [

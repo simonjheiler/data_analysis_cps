@@ -6,7 +6,7 @@ import pytask
 
 from src.config import BLD
 from src.config import SRC
-
+from src.data_management.compile_dataset import _compile_long_monthly_df
 
 survey_name = "supplement_tenure"
 
@@ -39,29 +39,39 @@ for spec_path in in_specs:
     }
     stata_instructions.append(tmp_instructions)
 
-print("Test")
+
+# @pytask.mark.parametrize(
+#     "stata, depends_on, produces",
+#     [
+#         (
+#             [
+#                 str(x)
+#                 for x in [
+#                     s["in_file_name"],
+#                     s["log"],
+#                     *s["deps"],
+#                     s["path_out"],
+#                     s["result"],
+#                     s["variables"],
+#                 ]
+#             ],
+#             [s["do"], *s["deps"]],
+#             [s["result"]],
+#         )
+#         for s in stata_instructions
+#     ],
+# )
+# def task_extract_data():
+#     pass
 
 
-@pytask.mark.parametrize(
-    "stata, depends_on, produces",
-    [
-        (
-            [
-                str(x)
-                for x in [
-                    s["in_file_name"],
-                    s["log"],
-                    *s["deps"],
-                    s["path_out"],
-                    s["result"],
-                    s["variables"],
-                ]
-            ],
-            [s["do"], *s["deps"]],
-            [s["result"]],
-        )
-        for s in stata_instructions
-    ],
-)
-def task_estimate():
-    pass
+infiles = os.listdir(BLD / "out" / "data" / "supplement_tenure")
+
+data = [BLD / "out" / "data" / "supplement_tenure" / x for x in infiles]
+prod = BLD / "out" / "data" / "supplement_tenure.csv"
+
+
+@pytask.mark.depends_on(data)
+@pytask.mark.produces(prod)
+def task_compile_data():
+    _compile_long_monthly_df(data, prod)

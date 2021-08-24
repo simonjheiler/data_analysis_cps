@@ -104,10 +104,10 @@ def format_one_dataset(df, specs):
 
     # set data types
     for col in cols_numeric:
-        df.loc[:, col] = df[col].astype("float")
+        df.loc[:, col] = df[col].astype(float)
 
     for col in cols_int:
-        df.loc[:, col] = df[col].astype("int")
+        df.loc[:, col] = df[col].astype(int)
 
     # for col in cols_int8:
     #     df.loc[:, col] = df[col].astype("Int8")

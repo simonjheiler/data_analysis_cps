@@ -28,23 +28,23 @@ data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.j
 #####################################################
 
 
-def _compile_long_monthly_df():
+def _compile_long_monthly_df(in_data, out_path):
 
-    date_start = data_instructions["supplement_tenure"]["date_start"]
-    date_end = data_instructions["supplement_tenure"]["date_end"]
-
-    periods_all = list(
-        pd.date_range(start=date_start, end=date_end, freq="YS").strftime("%Y-%m")
-    )
-    datasets_all = [
-        f
-        for f in os.listdir(SRC / "data_specs" / "data_specs" / "supplement_tenure")
-        if f.endswith(".json")
-    ]
-    datasets_all = [re.sub(r"cps\w_", "", f) for f in datasets_all]
-    datasets_all = [re.sub(".json", "", f) for f in datasets_all]
-
-    datasets_selected = [d for d in datasets_all if d in periods_all]
+    # date_start = data_instructions["supplement_tenure"]["date_start"]
+    # date_end = data_instructions["supplement_tenure"]["date_end"]
+    #
+    # periods_all = list(
+    #     pd.date_range(start=date_start, end=date_end, freq="YS").strftime("%Y-%m")
+    # )
+    # datasets_all = [
+    #     f
+    #     for f in os.listdir(SRC / "data_specs" / "data_specs" / "supplement_tenure")
+    #     if f.endswith(".json")
+    # ]
+    # datasets_all = [re.sub(r"cps\w_", "", f) for f in datasets_all]
+    # datasets_all = [re.sub(".json", "", f) for f in datasets_all]
+    #
+    # datasets_selected = [d for d in datasets_all if d in periods_all]
 
     cols_analysis = [
         "year",
@@ -59,6 +59,7 @@ def _compile_long_monthly_df():
         "citizenship_status",
         "tenure",
         "earnings_weekly",
+        "earnings_weekly_deflated",
         "hours_worked",
         "weight",
     ]
@@ -67,11 +68,11 @@ def _compile_long_monthly_df():
     # initiate object to store data and iterable
     analysis_df = pd.DataFrame(columns=cols_analysis)
 
-    for dataset in datasets_selected:
+    for dataset in in_data:
 
         # read in data
-        filename = "cpst_" + dataset + "_raw.csv"
-        specs_name = "cpst_" + dataset + ".json"
+        filename = os.path.splitext(os.path.basename(dataset))[0]
+        specs_name = re.sub("_raw", ".json", filename)
         specs = json.load(
             open(SRC / "data_specs" / "data_specs" / "supplement_tenure" / specs_name)
         )
@@ -93,13 +94,12 @@ def _compile_long_monthly_df():
         }
 
         tmp_df = pd.read_csv(
-            BLD / "out" / "data" / "supplement_tenure" / filename,
+            dataset,
             dtype=dtypes,
-            # index_col=specs["vardict"]["id"],
+            index_col=specs["var_dict"]["id"],
         )
 
         # format data
-        print(dataset)
         tmp_df = format_one_dataset(tmp_df, specs)
 
         # deflate wages
@@ -112,6 +112,7 @@ def _compile_long_monthly_df():
                 "education_reduced": "education",
                 "race_reduced": "race",
                 "marital_status_reduced": "marital_status",
+                "citizenship_status_reduced": "citizenship_status",
             }
         )
 
@@ -123,7 +124,9 @@ def _compile_long_monthly_df():
         # append current data to output df
         analysis_df = analysis_df.append(tmp_df[cols_analysis])
 
-    return analysis_df
+    analysis_df.to_csv(out_path)
+
+    return
 
 
 def _deflate_payments(df, cols, base):
@@ -151,6 +154,9 @@ def _deflate_payments(df, cols, base):
 
 if __name__ == "__main__":
 
-    df = _compile_long_monthly_df()
+    infiles = os.listdir(BLD / "out" / "data" / "supplement_tenure")
 
-    df.to_csv(BLD / "out" / "data" / "supplement_tenure.csv", index=False)
+    data = [BLD / "out" / "data" / "supplement_tenure" / x for x in infiles]
+    prod = BLD / "out" / "data" / "supplement_tenure.csv"
+
+    _compile_long_monthly_df(data, prod)

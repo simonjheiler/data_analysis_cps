@@ -1,0 +1,17 @@
+"""Run data analysis tasks.
+
+
+"""
+import pytask
+
+from src.config import BLD
+
+data = BLD / "out" / "data" / "supplement_tenure.csv"
+prod = BLD / "out" / "results" / "cps_returns_to_tenure.csv"
+
+
+@pytask.mark.r([str(x.resolve()) for x in [data] + [prod]])
+@pytask.mark.depends_on(["estimate_returns.r"] + [data])
+@pytask.mark.produces(prod)
+def task_data_analysis():
+    pass
