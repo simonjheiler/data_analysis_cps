@@ -71,7 +71,9 @@ race_reduced_cat = {
     "White": "white",
     "White only": "white",
     "White Only": "white",
+    "WHITE": "white",
     "Black": "black",
+    "BLACK": "black",
     "Black only": "black",
     "Black Only": "black",
     "American Indian, Aleut Eskimo": "other",
@@ -118,6 +120,8 @@ race_reduced_cat = {
     "4 or 5 races": "other",
     "4 or 5 Races": "other",
     "Other 4 and 5 Race Combinations": "other",
+    "AMERICAN INDIAN, ALEUT, ESKIMO": "other",
+    "ASIAN OR PACIFIC ISLANDER": "other",
 }
 
 married_reduced_cat = {
@@ -140,6 +144,14 @@ married_reduced_cat = {
     "SEPARATED": "not married",
     "Never married": "not married",
     "NEVER MARRIED": "not married",
+}
+
+citship_reduced_cat = {
+    "NATIVE, BORN IN THE UNITED": "yes",
+    "FOREIGN BORN, NOT A CITIZEN OF": "no",
+    "FOREIGN BORN, U.S. CITIZEN BY": "yes",
+    "NATIVE, BORN ABROAD OF AMERICAN": "yes",
+    "NATIVE, BORN IN PUERTO RICO OR": "yes",
 }
 
 age_thresholds = [
@@ -232,6 +244,11 @@ def _add_categorical_variables(df):
     # age group
     df.loc[:, "age_group"] = pd.cut(
         df["age"], age_thresholds, right=True, labels=age_groups
+    )
+
+    # citizenship status
+    df.loc[:, "citizenship_status_reduced"] = df["citizenship_status"].replace(
+        citship_reduced_cat
     )
 
     return df

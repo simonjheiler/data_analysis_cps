@@ -72,9 +72,7 @@ mis_codes_dict = {
 def format_one_dataset(df, specs):
 
     # define columns to be returned and data types
-    cols_numeric = [var for var in specs["var_dict"] if "weight_" in var] + [
-        "earnings_weekly"
-    ]
+    cols_numeric = ["earnings_weekly", "hours_worked", "tenure", "weight"]
     cols_int = ["year"]
     cols_int8 = ["age"]
     cols_str = ["state", "sex"]
@@ -84,6 +82,7 @@ def format_one_dataset(df, specs):
         "education_reduced",
         "marital_status_reduced",
         "race_reduced",
+        "citizenship_status_reduced",
     ]
 
     cols_out = cols_int + cols_str + cols_int8 + cols_categorical + cols_numeric
@@ -95,7 +94,7 @@ def format_one_dataset(df, specs):
     df.rename(columns=var_dict, inplace=True)
 
     # replace answer codes with values
-    df = _clean_variables(df, specs)
+    df = _clean_variables(df)
 
     # add variables
     df = _add_categorical_variables(df)
@@ -122,16 +121,19 @@ def format_one_dataset(df, specs):
     return df
 
 
-def _clean_variables(df, specs):
+def _clean_variables(df):
 
     for col in df.columns:
         df.loc[:, col].replace("Blank", np.nan, inplace=True)
+        df.loc[:, col].replace("No Response", np.nan, inplace=True)
+        df.loc[:, col].replace("No response", np.nan, inplace=True)
         df.loc[:, col].replace("not in universe", np.nan, inplace=True)
         df.loc[:, col].replace("NOT IN UNIVERSE", np.nan, inplace=True)
         df.loc[:, col].replace("NIU", np.nan, inplace=True)
+        df.loc[:, col].replace("Don't Know", np.nan, inplace=True)
         df.loc[:, col].replace("-1", np.nan, inplace=True)
-        df.loc[:, col].replace("-2", "I don't know", inplace=True)
-        df.loc[:, col].replace("-3", "refuse to answer", inplace=True)
+        df.loc[:, col].replace("-2", np.nan, inplace=True)
+        df.loc[:, col].replace("-3", np.nan, inplace=True)
 
     # clean age variable
     df.loc[:, "age"] = df.loc[:, "age"].replace(
@@ -139,21 +141,16 @@ def _clean_variables(df, specs):
     )
     df.loc[:, "age"] = pd.to_numeric(df.loc[:, "age"]).astype("Int8")
 
-    # clean year variable
-    dicts_year_1 = ["cpsb_1989-01.dct", "cpsb_1992-01.dct"]
-    dicts_year_2 = [
-        "cpsb_1994-01.dct",
-        "cpsb_1994-04.dct",
-        "cpsb_1995-06.dct",
-        "cpsb_1995-09.dct",
-    ]
-    if specs["data_dict"] in dicts_year_1:
-        df.loc[:, "year"] = specs["out_name"][5:8] + df.loc[:, "year"].astype(str)
-    elif specs["data_dict"] in dicts_year_2:
-        df.loc[:, "year"] = specs["out_name"][5:7] + df.loc[:, "year"].astype(str)
-
     # clean state codes
     df.loc[:, "state"] = df.loc[:, "state"].replace(state_codes_dict)
+
+    # clean tenure topcoding
+    df.loc[:, "tenure"] = df.loc[:, "tenure"].replace({"3900 or more (topcoded)": 3900})
+
+    # clean hours topcoding
+    df.loc[:, "hours_worked"] = df.loc[:, "hours_worked"].replace(
+        {"45 or more (topcoded)": 45}
+    )
 
     return df
 

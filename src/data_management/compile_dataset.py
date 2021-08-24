@@ -75,23 +75,32 @@ def _compile_long_monthly_df():
         specs = json.load(
             open(SRC / "data_specs" / "data_specs" / "supplement_tenure" / specs_name)
         )
+
+        dtypes = {
+            specs["var_dict"]["year"]: int,
+            specs["var_dict"]["state"]: str,
+            specs["var_dict"]["sex"]: str,
+            specs["var_dict"]["age"]: int,
+            specs["var_dict"]["education"]: str,
+            specs["var_dict"]["labor_force_status"]: str,
+            specs["var_dict"]["race"]: str,
+            specs["var_dict"]["marital_status"]: str,
+            specs["var_dict"]["citizenship_status"]: str,
+            specs["var_dict"]["tenure"]: str,
+            specs["var_dict"]["earnings_weekly"]: float,
+            specs["var_dict"]["hours_worked"]: str,
+            specs["var_dict"]["weight"]: float,
+        }
+
         tmp_df = pd.read_csv(
             BLD / "out" / "data" / "supplement_tenure" / filename,
-            # dtype=data_types_cps_supplement_tenure,
+            dtype=dtypes,
             # index_col=specs["vardict"]["id"],
         )
 
         # format data
+        print(dataset)
         tmp_df = format_one_dataset(tmp_df, specs)
-
-        # drop observations with missing values in required field
-        tmp_df.dropna(subset=["age"], inplace=True)
-        tmp_df.dropna(subset=["labor_force_status_reduced"], inplace=True)
-
-        # drop observations that are out of scope
-        tmp_df = tmp_df[tmp_df.sex == "MALE"]
-        tmp_df = tmp_df[tmp_df.age >= 16]
-        tmp_df = tmp_df[tmp_df.age <= 64]
 
         # deflate wages
         tmp_df = _deflate_payments(tmp_df, cols_payments, 2002)
