@@ -1,0 +1,191 @@
+{
+  "2002-01": {
+    "read_file": "cpst_2002-01.do",
+    "data_dict": "cpst_2002-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "peage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "perace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "prst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "pesce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2004-01": {
+    "read_file": "cpst_2004-01.do",
+    "data_dict": "cpst_2004-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "prtage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "prst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "pesce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2006-01": {
+    "read_file": "cpst_2006-01.do",
+    "data_dict": "cpst_2006-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "peage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "prst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "pesce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2008-01": {
+    "read_file": "cpst_2008-01.do",
+    "data_dict": "cpst_2008-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "peage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "prst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "pesce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2010-01": {
+    "read_file": "cpst_2010-01.do",
+    "data_dict": "cpst_2010-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "peage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "prst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "pesce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2012-01": {
+    "read_file": "cpst_2012-01.do",
+    "data_dict": "cpst_2012-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "prtage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "ptst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "ptsce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2014-01": {
+    "read_file": "cpst_2014-01.do",
+    "data_dict": "cpst_2014-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestcen",
+      "sex": "pesex",
+      "age": "prtage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "ptst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "ptsce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2016-01": {
+    "read_file": "cpst_2016-01.do",
+    "data_dict": "cpst_2016-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestfips",
+      "sex": "pesex",
+      "age": "prtage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "ptst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "ptsce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  },
+  "2018-01": {
+    "read_file": "cpst_2018-01.do",
+    "data_dict": "cpst_2018-01.dct",
+    "var_dict": {
+      "id": "hrhhid",
+      "year": "hryear4",
+      "state": "gestfips",
+      "sex": "pesex",
+      "age": "prtage",
+      "education": "peeduca",
+      "labor_force_status": "pemlr",
+      "race": "ptdtrace",
+      "marital_status": "pemaritl",
+      "citizenship_status": "prcitshp",
+      "tenure": "ptst1tn",
+      "earnings_weekly": "prernwa",
+      "hours_worked": "ptsce5o",
+      "eligibility": "prtensat",
+      "weight": "pwsswgt"
+    }
+  }
+}

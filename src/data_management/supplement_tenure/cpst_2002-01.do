@@ -1,27 +1,30 @@
-log using cpsjan02, text replace
-set mem 1000m
+capture log close
+
+local log_file `1'
+local in_file `2'
+local out_file `3'
+local data_dict `4'
+local variables `5'
+
+display `"`variables'"'
+display `"`data_dict'"'
+
+*capture log using `log_file', replace
 
 /*------------------------------------------------
-  by Jean Roth Mon Mar 20 14:20:01 EST 2006
-  Please report errors to jroth@nber.org
+  developed by Jean Roth
+  edited by Simon Heiler Fri Aug 13 18:00:00 CEST 2021
   NOTE:  This program is distributed under the GNU GPL.
   See end of this file and http://www.gnu.org/licenses/ for details.
-  Run with do cpsjan02
 ----------------------------------------------- */
 
-/* The following line should contain
-   the complete path and name of the raw data file.
-   On a PC, use backslashes in paths as in C:\  */
+/* The following line should contain the path to the raw data file */
 
-local dat_name "/homes/data/cps/cpsjan02.dat"
-
-/* The following line should contain the path to your output '.dta' file */
-
-local dta_name "./cpsjan02.dta"
+local dat_name `in_file'
 
 /* The following line should contain the path to the data dictionary file */
 
-local dct_name "./cpsjan02.dct"
+local dct_name `data_dict'
 
 /* The line below does NOT need to be changed */
 
@@ -2979,7 +2982,10 @@ label define prdispwk
 	1           "Displaced Worker"
 ;
 
-saveold "`dta_name'" , replace
+#delimit cr
+
+outsheet `variables' using `out_file', comma replace
+capture log close
 
 /*
 Copyright 2006 shared by the National Bureau of Economic Research and Jean Roth

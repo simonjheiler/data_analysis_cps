@@ -1,28 +1,30 @@
 capture log close
-log using cpsfeb05.log, replace
-set mem 500m
+
+local log_file `1'
+local in_file `2'
+local out_file `3'
+local data_dict `4'
+local variables `5'
+
+display `"`variables'"'
+display `"`data_dict'"'
+
+*capture log using `log_file', replace
 
 /*------------------------------------------------
-  by Jean Roth Thu Oct  9 11:15:11 EDT 2008
-  Please report errors to jroth@nber.org
+  developed by Jean Roth
+  edited by Simon Heiler Thu Jul 02 18:00:00 CEST 2020
   NOTE:  This program is distributed under the GNU GPL.
   See end of this file and http://www.gnu.org/licenses/ for details.
-  Run with do cpsfeb05
 ----------------------------------------------- */
 
-/* The following line should contain
-   the complete path and name of the raw data file.
-   On a PC, use backslashes in paths as in C:\  */
+/* The following line should contain the path to the raw data file */
 
-local dat_name "/homes/data/cps/cpsfeb05.dat"
-
-/* The following line should contain the path to your output '.dta' file */
-
-local dta_name "./cpsfeb05.dta"
+local dat_name `in_file'
 
 /* The following line should contain the path to the data dictionary file */
 
-local dct_name "./cpsfeb05.dct"
+local dct_name `data_dict'
 
 /* The line below does NOT need to be changed */
 
@@ -4435,8 +4437,9 @@ label define prsupern
 ;
 
 #delimit cr
-compress
-saveold "`dta_name'" , replace
+
+outsheet `variables' using `out_file', comma replace
+capture log close
 
 /*
 Copyright 2008 shared by the National Bureau of Economic Research and Jean Roth

@@ -1,0 +1,22 @@
+{
+  "in_name": "cpst_2018-01",
+  "out_name": "cpst_2018-01",
+  "read_file": "cpst_2018-01.do",
+  "data_dict": "cpst_2018-01.dct",
+  "var_dict": {
+    "id": "hrhhid",
+    "year": "hryear4",
+    "state": "gestfips",
+    "sex": "pesex",
+    "age": "prtage",
+    "education": "peeduca",
+    "labor_force_status": "pemlr",
+    "race": "ptdtrace",
+    "marital_status": "pemaritl",
+    "citizenship_status": "prcitshp",
+    "tenure": "ptst1tn",
+    "earnings_weekly": "prernwa",
+    "hours_worked": "ptsce5o",
+    "weight": "pwsswgt"
+  }
+}

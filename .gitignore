@@ -72,3 +72,6 @@ ___*
 
 # pycharm-related
 .idea
+
+# data folders that are too large
+src/original_data/

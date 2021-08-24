@@ -1,0 +1,32 @@
+{
+  "in_name": "apr98pub",
+  "out_name": "cpsb_1998-04",
+  "read_file": "cpsb_1998-01.do",
+  "data_dict": "cpsb_1998-01.dct",
+  "var_dict": {
+    "year": "hryear4",
+    "month": "hrmonth",
+    "month_in_sample": "hrmis",
+    "state": "gestfips",
+    "sex": "pesex",
+    "age": "peage",
+    "education": "peeduca",
+    "labor_force_status": "pemlr",
+    "race": "perace",
+    "marital_status": "pemaritl",
+    "citizenship_status": "prcitshp",
+    "spouse_id": "pespouse",
+    "n_children": "prnmchld",
+    "earnings_weekly": "prernwa",
+    "hourly_rate": "prernhly",
+    "hours_worked": "peernhro",
+    "weight_long": "pwlgwgt",
+    "weight_personal": "pwsswgt",
+    "weight_bls": "pwcmpwgt"
+  },
+  "identifier": [
+    "hrhhid",
+    "huhhnum",
+    "pulineno"
+  ]
+}
