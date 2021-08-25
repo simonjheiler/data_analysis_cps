@@ -32,6 +32,8 @@ dependencies:
   - r-rjson
   - r-lmtest
   - r-sandwich
+  - r-spatstat
+  - r-ggeffects
 
 
   - virtualenv=20.0.33
