@@ -1,6 +1,5 @@
 import json
 import os
-import re
 
 import numpy as np
 import pandas as pd
@@ -72,7 +71,7 @@ def _compile_long_monthly_df(in_data, out_path):
 
         # read in data
         filename = os.path.splitext(os.path.basename(dataset))[0]
-        specs_name = re.sub("_raw", ".json", filename)
+        specs_name = filename + ".json"
         specs = json.load(
             open(SRC / "data_specs" / "data_specs" / "supplement_tenure" / specs_name)
         )
@@ -157,6 +156,7 @@ if __name__ == "__main__":
     infiles = os.listdir(BLD / "out" / "data" / "supplement_tenure")
 
     data = [BLD / "out" / "data" / "supplement_tenure" / x for x in infiles]
+    data = [x for x in data if os.path.isfile(x)]
     prod = BLD / "out" / "data" / "supplement_tenure.csv"
 
     _compile_long_monthly_df(data, prod)

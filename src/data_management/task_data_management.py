@@ -68,6 +68,7 @@ for spec_path in in_specs:
 infiles = os.listdir(BLD / "out" / "data" / "supplement_tenure")
 
 data = [BLD / "out" / "data" / "supplement_tenure" / x for x in infiles]
+data = [x for x in data if os.path.isfile(x)]
 prod = BLD / "out" / "data" / "supplement_tenure.csv"
 
 

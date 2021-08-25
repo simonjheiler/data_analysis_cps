@@ -466,8 +466,8 @@ _column(1139)   byte prsupsat    %2f "Interview Status - Displaced Worker"
 _column(1141) double pwsupwgt %10.4f "Displaced Worker Supplement Weight"
 _column(1151)   byte prtensat    %2f "Interview Status - Job Tenure and"
 _column(1153) double pwtenwgt %10.4f "Job Tenure and Occupational Mobility"
-_column(1163)    int ptst1tn     %4f "Recode for employer tenure, expressed in"
-_column(1167)    int ptsd18tn    %4f "Recode for tenure on lost job, expressed in"
+_column(1163) double ptst1tn   %4.2f "Recode for employer tenure, expressed "
+_column(1167) double ptsd18tn  %4.2f "Recode for tenure on lost job, express"
 _column(1171)   byte prdispwk    %2f "Recode for complete displaced worker"
 
 }
