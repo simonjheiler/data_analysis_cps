@@ -71,8 +71,8 @@ def _compile_long_monthly_df(in_data, out_path):
     for dataset in in_data:
 
         # read in data
-        filename = os.path.splitext(os.path.basename(dataset))[0]
-        specs_name = re.sub("_raw", ".json", filename)
+        filename = os.path.basename(dataset)
+        specs_name = re.sub(".csv", ".json", filename)
         specs = json.load(
             open(SRC / "data_specs" / "data_specs" / "supplement_tenure" / specs_name)
         )
@@ -154,9 +154,15 @@ def _deflate_payments(df, cols, base):
 
 if __name__ == "__main__":
 
-    infiles = os.listdir(BLD / "out" / "data" / "supplement_tenure")
+    survey_name = "supplement_tenure"
 
-    data = [BLD / "out" / "data" / "supplement_tenure" / x for x in infiles]
+    infiles = os.listdir(BLD / "out" / "data" / survey_name)
+
+    data = [
+        BLD / "out" / "data" / "supplement_tenure" / x
+        for x in infiles
+        if os.path.isfile(BLD / "out" / "data" / survey_name / x)
+    ]
     prod = BLD / "out" / "data" / "supplement_tenure.csv"
 
     _compile_long_monthly_df(data, prod)

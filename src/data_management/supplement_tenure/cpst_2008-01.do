@@ -9,7 +9,7 @@ local variables `5'
 display `"`variables'"'
 display `"`data_dict'"'
 
-*capture log using `log_file', replace
+log using `log_file', replace
 
 /*------------------------------------------------
   developed by Jean Roth

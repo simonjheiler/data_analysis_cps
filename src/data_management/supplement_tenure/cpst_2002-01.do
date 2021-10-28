@@ -6,10 +6,7 @@ local out_file `3'
 local data_dict `4'
 local variables `5'
 
-display `"`variables'"'
-display `"`data_dict'"'
-
-*capture log using `log_file', replace
+log using `log_file', replace
 
 /*------------------------------------------------
   developed by Jean Roth

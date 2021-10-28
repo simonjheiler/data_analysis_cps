@@ -31,43 +31,67 @@ for spec_path in in_specs:
             SRC / "data_management" / survey_name / tmp["read_file"],
             SRC / "data_specs" / "data_dicts" / survey_name / tmp["data_dict"],
         ],
-        "log": BLD / "out" / "data" / survey_name / "log" / f"{tmp['out_name']}.log",
+        "log_inner": BLD
+        / "out"
+        / "data"
+        / survey_name
+        / "log"
+        / f"{tmp['out_name']}.log",
+        "log_outer": BLD
+        / "out"
+        / "data"
+        / "log"
+        / f"extract_data_{survey_name}_{tmp['out_name']}.log",
         "in_file_name": in_file_name,
+        "in_file_path": SRC / "original_data" / survey_name / f"{tmp['in_name']}.zip",
+        "do_file_path": SRC / "data_management" / survey_name / tmp["read_file"],
+        "dict_file_path": SRC
+        / "data_specs"
+        / "data_dicts"
+        / survey_name
+        / tmp["data_dict"],
         "path_out": BLD / "out" / "data" / survey_name,
         "result": BLD / "out" / "data" / survey_name / f"{tmp['out_name']}.csv",
-        "variables": " ".join(list(tmp["var_dict"].values())),
+        "variables": "-".join(list(tmp["var_dict"].values())),
     }
     stata_instructions.append(tmp_instructions)
 
 
-# @pytask.mark.parametrize(
-#     "stata, depends_on, produces",
-#     [
-#         (
-#             [
-#                 str(x)
-#                 for x in [
-#                     s["in_file_name"],
-#                     s["log"],
-#                     *s["deps"],
-#                     s["path_out"],
-#                     s["result"],
-#                     s["variables"],
-#                 ]
-#             ],
-#             [s["do"], *s["deps"]],
-#             [s["result"]],
-#         )
-#         for s in stata_instructions
-#     ],
-# )
-# def task_extract_data():
-#     pass
+@pytask.mark.parametrize(
+    "stata, depends_on, produces",
+    [
+        (
+            [
+                str(x)
+                for x in [
+                    s["in_file_name"],
+                    s["log_inner"],
+                    s["log_outer"],
+                    s["in_file_path"],
+                    s["do_file_path"],
+                    s["dict_file_path"],
+                    s["path_out"],
+                    s["result"],
+                    s["variables"],
+                ]
+            ],
+            [s["do"], *s["deps"]],
+            [s["log_inner"], s["log_outer"], s["result"]],
+        )
+        for s in stata_instructions
+    ],
+)
+def task_extract_data():
+    pass
 
 
-infiles = os.listdir(BLD / "out" / "data" / "supplement_tenure")
+infiles = os.listdir(BLD / "out" / "data" / survey_name)
 
-data = [BLD / "out" / "data" / "supplement_tenure" / x for x in infiles]
+data = [
+    BLD / "out" / "data" / "supplement_tenure" / x
+    for x in infiles
+    if os.path.isfile(BLD / "out" / "data" / survey_name / x)
+]
 prod = BLD / "out" / "data" / "supplement_tenure.csv"
 
 
