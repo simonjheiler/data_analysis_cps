@@ -5,10 +5,10 @@ education from CPS data.
 
 # read in arguments (1: path input file, 2: path output file)
 args <- commandArgs(trailingOnly=TRUE)
-args <- c(
-  "C:\\Users\\simon\\Documents\\sync_uni\\Projects\\data_analysis_cps\\bld\\out\\data\\supplement_tenure.csv",
-  "C:\\Users\\simon\\Documents\\sync_uni\\Projects\\data_analysis_cps\\bld\\out\\results\\cps_returns_to_tenure.csv"
-)
+# args <- c(
+#   "C:\\Users\\simon\\Documents\\sync_uni\\Projects\\data_analysis_cps\\bld\\out\\data\\supplement_tenure.csv",
+#   "C:\\Users\\simon\\Documents\\sync_uni\\Projects\\data_analysis_cps\\bld\\out\\results\\cps_returns_to_tenure.csv"
+# )
 
 # load required packages
 library(foreign)
