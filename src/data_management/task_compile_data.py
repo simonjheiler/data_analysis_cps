@@ -3,7 +3,7 @@ import os
 import pytask
 
 from src.config import BLD
-from src.data_management.compile_dataset import _compile_long_monthly_df
+from src.data_management.compile_dataset import _compile_long_df
 
 
 survey_name = "supplement_tenure"
@@ -21,4 +21,4 @@ prod = BLD / "out" / "data" / f"cps_extract_{survey_name}.csv"
 @pytask.mark.depends_on(data)
 @pytask.mark.produces(prod)
 def task_compile_data():
-    _compile_long_monthly_df(data, prod)
+    _compile_long_df(data, prod, survey_name)
