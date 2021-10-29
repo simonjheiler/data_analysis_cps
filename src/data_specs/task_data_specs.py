@@ -16,9 +16,11 @@ cps_data_instructions = json.load(
     open(SRC / "data_specs" / "cps_data_instructions.json")
 )
 
+surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
+
 prefixes = {}
 datasets = {}
-for survey in ["basic_monthly", "supplement_tenure"]:
+for survey in surveys:
 
     # load info from data instructions
     date_start = datetime.strptime(cps_data_instructions[survey]["date_start"], "%Y-%m")
@@ -65,7 +67,7 @@ for survey in ["basic_monthly", "supplement_tenure"]:
             },
             survey,
         )
-        for survey in ["basic_monthly", "supplement_tenure"]
+        for survey in surveys
     ],
 )
 def task_get_data_specs(depends_on, produces, survey_name):

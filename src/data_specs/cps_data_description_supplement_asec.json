@@ -1,7 +1,7 @@
 {
-  "1989": {
-    "read_file": "cpsy_1989.do",
-    "data_dict": "cpsy_1989.dct",
+  "1989-03": {
+    "read_file": "cpsa_1989-03.do",
+    "data_dict": "cpsa_1989-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -20,9 +20,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1990": {
-    "read_file": "cpsy_1990.do",
-    "data_dict": "cpsy_1990.dct",
+  "1990-03": {
+    "read_file": "cpsa_1990-03.do",
+    "data_dict": "cpsa_1990-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -41,9 +41,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1991": {
-    "read_file": "cpsy_1991.do",
-    "data_dict": "cpsy_1991.dct",
+  "1991-03": {
+    "read_file": "cpsa_1991-03.do",
+    "data_dict": "cpsa_1991-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -62,9 +62,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1992": {
-    "read_file": "cpsy_1992.do",
-    "data_dict": "cpsy_1992.dct",
+  "1992-03": {
+    "read_file": "cpsa_1992-03.do",
+    "data_dict": "cpsa_1992-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -83,9 +83,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1993": {
-    "read_file": "cpsy_1993.do",
-    "data_dict": "cpsy_1993.dct",
+  "1993-03": {
+    "read_file": "cpsa_1993-03.do",
+    "data_dict": "cpsa_1993-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -104,9 +104,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1994": {
-    "read_file": "cpsy_1994.do",
-    "data_dict": "cpsy_1994.dct",
+  "1994-03": {
+    "read_file": "cpsa_1994-03.do",
+    "data_dict": "cpsa_1994-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -125,9 +125,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1995": {
-    "read_file": "cpsy_1995.do",
-    "data_dict": "cpsy_1995.dct",
+  "1995-03": {
+    "read_file": "cpsa_1995-03.do",
+    "data_dict": "cpsa_1995-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -146,9 +146,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1996": {
-    "read_file": "cpsy_1996.do",
-    "data_dict": "cpsy_1996.dct",
+  "1996-03": {
+    "read_file": "cpsa_1996-03.do",
+    "data_dict": "cpsa_1996-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -167,9 +167,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1997": {
-    "read_file": "cpsy_1997.do",
-    "data_dict": "cpsy_1997.dct",
+  "1997-03": {
+    "read_file": "cpsa_1997-03.do",
+    "data_dict": "cpsa_1997-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -188,9 +188,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1998": {
-    "read_file": "cpsy_1998.do",
-    "data_dict": "cpsy_1998.dct",
+  "1998-03": {
+    "read_file": "cpsa_1998-03.do",
+    "data_dict": "cpsa_1998-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -209,9 +209,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "1999": {
-    "read_file": "cpsy_1999.do",
-    "data_dict": "cpsy_1999.dct",
+  "1999-03": {
+    "read_file": "cpsa_1999-03.do",
+    "data_dict": "cpsa_1999-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -230,9 +230,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2000": {
-    "read_file": "cpsy_2000.do",
-    "data_dict": "cpsy_2000.dct",
+  "2000-03": {
+    "read_file": "cpsa_2000-03.do",
+    "data_dict": "cpsa_2000-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "hg_st60",
@@ -251,9 +251,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2001": {
-    "read_file": "cpsy_2001.do",
-    "data_dict": "cpsy_2001.dct",
+  "2001-03": {
+    "read_file": "cpsa_2001-03.do",
+    "data_dict": "cpsa_2001-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -272,9 +272,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2002": {
-    "read_file": "cpsy_2002.do",
-    "data_dict": "cpsy_2002.dct",
+  "2002-03": {
+    "read_file": "cpsa_2002-03.do",
+    "data_dict": "cpsa_2002-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -293,9 +293,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2003": {
-    "read_file": "cpsy_2003.do",
-    "data_dict": "cpsy_2003.dct",
+  "2003-03": {
+    "read_file": "cpsa_2003-03.do",
+    "data_dict": "cpsa_2003-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -314,9 +314,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2004": {
-    "read_file": "cpsy_2004.do",
-    "data_dict": "cpsy_2004.dct",
+  "2004-03": {
+    "read_file": "cpsa_2004-03.do",
+    "data_dict": "cpsa_2004-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -335,9 +335,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2005": {
-    "read_file": "cpsy_2005.do",
-    "data_dict": "cpsy_2005.dct",
+  "2005-03": {
+    "read_file": "cpsa_2005-03.do",
+    "data_dict": "cpsa_2005-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -356,9 +356,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2006": {
-    "read_file": "cpsy_2006.do",
-    "data_dict": "cpsy_2006.dct",
+  "2006-03": {
+    "read_file": "cpsa_2006-03.do",
+    "data_dict": "cpsa_2006-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -377,9 +377,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2007": {
-    "read_file": "cpsy_2007.do",
-    "data_dict": "cpsy_2007.dct",
+  "2007-03": {
+    "read_file": "cpsa_2007-03.do",
+    "data_dict": "cpsa_2007-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -398,9 +398,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2008": {
-    "read_file": "cpsy_2008.do",
-    "data_dict": "cpsy_2008.dct",
+  "2008-03": {
+    "read_file": "cpsa_2008-03.do",
+    "data_dict": "cpsa_2008-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -419,9 +419,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2009": {
-    "read_file": "cpsy_2009.do",
-    "data_dict": "cpsy_2009.dct",
+  "2009-03": {
+    "read_file": "cpsa_2009-03.do",
+    "data_dict": "cpsa_2009-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -440,9 +440,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2010": {
-    "read_file": "cpsy_2010.do",
-    "data_dict": "cpsy_2010.dct",
+  "2010-03": {
+    "read_file": "cpsa_2010-03.do",
+    "data_dict": "cpsa_2010-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -461,9 +461,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2011": {
-    "read_file": "cpsy_2011.do",
-    "data_dict": "cpsy_2011.dct",
+  "2011-03": {
+    "read_file": "cpsa_2011-03.do",
+    "data_dict": "cpsa_2011-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -482,9 +482,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2012": {
-    "read_file": "cpsy_2012.do",
-    "data_dict": "cpsy_2012.dct",
+  "2012-03": {
+    "read_file": "cpsa_2012-03.do",
+    "data_dict": "cpsa_2012-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -503,9 +503,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2013": {
-    "read_file": "cpsy_2013.do",
-    "data_dict": "cpsy_2013.dct",
+  "2013-03": {
+    "read_file": "cpsa_2013-03.do",
+    "data_dict": "cpsa_2013-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -524,9 +524,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2014": {
-    "read_file": "cpsy_2014.do",
-    "data_dict": "cpsy_2014.dct",
+  "2014-03": {
+    "read_file": "cpsa_2014-03.do",
+    "data_dict": "cpsa_2014-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -545,9 +545,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2015": {
-    "read_file": "cpsy_2015.do",
-    "data_dict": "cpsy_2015.dct",
+  "2015-03": {
+    "read_file": "cpsa_2015-03.do",
+    "data_dict": "cpsa_2015-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -566,9 +566,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2016": {
-    "read_file": "cpsy_2016.do",
-    "data_dict": "cpsy_2016.dct",
+  "2016-03": {
+    "read_file": "cpsa_2016-03.do",
+    "data_dict": "cpsa_2016-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -587,9 +587,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2017": {
-    "read_file": "cpsy_2017.do",
-    "data_dict": "cpsy_2017.dct",
+  "2017-03": {
+    "read_file": "cpsa_2017-03.do",
+    "data_dict": "cpsa_2017-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",
@@ -608,9 +608,9 @@
       "weight_supplement": "marsupwt"
     }
   },
-  "2018": {
-    "read_file": "cpsy_2018.do",
-    "data_dict": "cpsy_2018.dct",
+  "2018-03": {
+    "read_file": "cpsa_2018-03.do",
+    "data_dict": "cpsa_2018-03.dct",
     "var_dict": {
       "year": "h_year",
       "state": "gestfips",

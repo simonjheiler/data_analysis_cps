@@ -71,19 +71,29 @@ def _write_data_specs_cps_basic_monthly(instructions, description):
 
 def _write_data_specs_cps_supplement_asec(instructions, description):
 
-    date_start = cps_data_instructions["supplement_asec"]["date_start"]
-    date_end = cps_data_instructions["supplement_asec"]["date_end"]
-    var_list = cps_data_instructions["supplement_asec"]["variables"]
+    date_start = datetime.strptime(instructions["date_start"], "%Y-%m")
+    date_end = datetime.strptime(instructions["date_end"], "%Y-%m")
+    var_list = instructions["variables"]
 
-    data_desc = pd.DataFrame.from_dict(cps_description_supplement_asec, orient="index")
+    surveys_all = list(description.keys())
+    surveys_all = [datetime.strptime(survey, "%Y-%m") for survey in surveys_all]
+
+    surveys_selected = []
+    for survey in surveys_all:
+        if survey >= date_start and survey <= date_end:
+            surveys_selected.append(survey)
+
+    surveys_selected = [
+        datetime.strftime(survey, "%Y-%m") for survey in surveys_selected
+    ]
+
+    data_desc = pd.DataFrame.from_dict(description, orient="index")
     data_desc["var_dict"] = data_desc["var_dict"].apply(
         _filter_vardict_cps, args=[var_list]
     )
 
-    specs_out = pd.DataFrame(
-        index=pd.date_range(start=date_start, end=date_end, freq="YS").strftime("%Y-%m")
-    )
-    specs_out["in_name"] = "cpsa" + specs_out.index
+    specs_out = pd.DataFrame(index=surveys_selected)
+    specs_out["in_name"] = "cpsa_" + specs_out.index
     specs_out["out_name"] = "cpsa_" + specs_out.index
 
     specs_out = specs_out.join(data_desc)
@@ -149,9 +159,15 @@ def _write_data_specs_cps(survey, instructions, description):
 if __name__ == "__main__":
 
     # get data specs
-    data_specs_basic_monthly = _write_data_specs_cps_basic_monthly()
-    data_specs_supplement_asec = _write_data_specs_cps_supplement_asec()
-    data_specs_supplement_tenure = _write_data_specs_cps_supplement_tenure()
+    data_specs_basic_monthly = _write_data_specs_cps_basic_monthly(
+        cps_data_instructions["basic_monthly"], cps_description_basic_monthly
+    )
+    data_specs_supplement_asec = _write_data_specs_cps_supplement_asec(
+        cps_data_instructions["supplement_asec"], cps_description_supplement_asec
+    )
+    data_specs_supplement_tenure = _write_data_specs_cps_supplement_tenure(
+        cps_data_instructions["supplement_tenure"], cps_description_supplement_tenure
+    )
 
     # write individual specification files to build directory
     for dataset in data_specs_basic_monthly:
