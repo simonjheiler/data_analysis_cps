@@ -15,8 +15,6 @@ dependencies:
   - pytask-latex>=0.0.10
 
   - pytask-r>=0.0.6
-
-
   - pytask-stata>=0.0.3
 
   - pytest
@@ -32,8 +30,10 @@ dependencies:
   - r-rjson
   - r-lmtest
   - r-sandwich
+  - r-spatstat
+  - r-ggeffects
 
-
+  - seaborn
   - virtualenv=20.0.33
 
   - pip:
