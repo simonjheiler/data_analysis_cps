@@ -1,10 +1,9 @@
 import json
 import os
-from pathlib import Path
 
 import pytask
 
-from src.config import BLD
+from src.config import ROOT
 from src.config import SRC
 
 stata_instructions = []
@@ -23,37 +22,26 @@ for survey_name in ["supplement_tenure", "supplement_asec"]:
 
         tmp = json.load(open(spec_path))
         tmp_instructions = {
-            "do": Path("extract_data.do"),
+            "do": SRC / "data_management" / "extract_data.do",
             "deps": [
                 spec_path,
                 SRC / "original_data" / survey_name / f"{tmp['in_name']}.zip",
                 SRC / "data_management" / survey_name / tmp["read_file"],
                 SRC / "data_specs" / "data_dicts" / survey_name / tmp["data_dict"],
             ],
-            "log_inner": BLD
-            / "out"
-            / "data"
-            / survey_name
-            / "log"
-            / f"{tmp['out_name']}.log",
-            "log_outer": BLD
-            / "out"
-            / "data"
-            / "log"
-            / f"extract_data_{survey_name}_{tmp['out_name']}.log",
-            "in_file_name": in_file_name,
-            "in_file_path": SRC
-            / "original_data"
-            / survey_name
-            / f"{tmp['in_name']}.zip",
-            "do_file_path": SRC / "data_management" / survey_name / tmp["read_file"],
-            "dict_file_path": SRC
-            / "data_specs"
-            / "data_dicts"
-            / survey_name
-            / tmp["data_dict"],
-            "path_out": BLD / "out" / "data" / survey_name,
-            "result": BLD / "out" / "data" / survey_name / f"{tmp['out_name']}.csv",
+            "file_name": in_file_name,
+            "path_project": str(ROOT) + "/",
+            "path_log_inner": "/".join(["bld", "out", "data", survey_name, "log"])
+            + "/",
+            "path_log_outer": "/".join(["bld", "out", "data", "log"]) + "/",
+            "path_data": "/".join(["src", "original_data", survey_name]) + "/",
+            "path_do": "/".join(
+                ["src", "data_management", survey_name, tmp["read_file"]]
+            ),
+            "path_dict": "/".join(
+                ["src", "data_specs", "data_dicts", survey_name, tmp["data_dict"]]
+            ),
+            "path_out": "/".join(["bld", "out", "data", survey_name]) + "/",
             "variables": "-".join(list(tmp["var_dict"].values())),
         }
         stata_instructions.append(tmp_instructions)
@@ -66,19 +54,25 @@ for survey_name in ["supplement_tenure", "supplement_asec"]:
             [
                 str(x)
                 for x in [
-                    s["in_file_name"],
-                    s["log_inner"],
-                    s["log_outer"],
-                    s["in_file_path"],
-                    s["do_file_path"],
-                    s["dict_file_path"],
+                    s["file_name"],
+                    s["path_project"],
+                    s["path_log_inner"],
+                    s["path_log_outer"],
+                    s["path_data"],
+                    s["path_do"],
+                    s["path_dict"],
                     s["path_out"],
-                    s["result"],
                     s["variables"],
                 ]
             ],
             [s["do"], *s["deps"]],
-            [s["log_inner"], s["log_outer"], s["result"]],
+            [
+                ROOT / s["path_log_inner"] / f"{s['file_name']}.log",
+                ROOT
+                / s["path_log_outer"]
+                / f"extract_data_{survey_name}_{s['file_name']}.log",
+                ROOT / s["path_out"] / f"{s['file_name']}.csv",
+            ],
         )
         for s in stata_instructions
     ],
