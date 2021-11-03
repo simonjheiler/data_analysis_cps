@@ -82,13 +82,23 @@ def format_one_dataset(df, specs):
         "education_reduced",
         "marital_status_reduced",
         "race_reduced",
-        "citizenship_status_reduced",
     ]
 
     cols_out = cols_int + cols_str + cols_int8 + cols_categorical + cols_numeric
 
     var_dict = specs["var_dict"]
     var_dict = {v: k for k, v in var_dict.items()}
+
+    # read in columns used to construct match identifier
+    cols_match = specs["identifier"]
+
+    # create longitudinal match identifier
+    df.loc[:, "match_identifier"] = df.loc[:, cols_match[0]].astype(str)
+    for col in cols_match[1:]:
+        df.loc[:, "match_identifier"] += df.loc[:, col].astype(str)
+
+    # set identifier as index
+    df.set_index("match_identifier", inplace=True)
 
     # rename variables to uniform labels
     df.rename(columns=var_dict, inplace=True)

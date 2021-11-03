@@ -220,7 +220,7 @@ _column(268 )    int fhousreq    %3f "Based on USDA figures"
 _column(1   )   byte precord     %1f
 _column(2   )   long ph_seq      %5f "Household sequence number"
 _column(7   )   byte pppos       %2f "Trailer portion of unique household ID"
-_column(9   )   byte pulineno    %2f "Item 18A - Line number"
+_column(9   )   byte a_lineno    %2f "Item 18A - Line number"
 _column(11  )   byte a_parent    %2f "Item 18C - Parent's line number"
 _column(13  )   byte a_exprrp    %2f "Expanded relationship code"
 _column(15  )   byte a_age       %2f "Item 18D - Age"

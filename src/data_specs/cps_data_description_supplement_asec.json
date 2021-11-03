@@ -19,7 +19,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1990-03": {
     "read_file": "cpsa_1990-03.do",
@@ -41,7 +46,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1991-03": {
     "read_file": "cpsa_1991-03.do",
@@ -63,7 +73,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1992-03": {
     "read_file": "cpsa_1992-03.do",
@@ -85,7 +100,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1993-03": {
     "read_file": "cpsa_1993-03.do",
@@ -107,7 +127,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1994-03": {
     "read_file": "cpsa_1994-03.do",
@@ -129,7 +154,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1995-03": {
     "read_file": "cpsa_1995-03.do",
@@ -151,7 +181,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "pulineno"
+    ]
   },
   "1996-03": {
     "read_file": "cpsa_1996-03.do",
@@ -173,7 +208,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1997-03": {
     "read_file": "cpsa_1997-03.do",
@@ -195,7 +235,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1998-03": {
     "read_file": "cpsa_1998-03.do",
@@ -217,7 +262,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "1999-03": {
     "read_file": "cpsa_1999-03.do",
@@ -239,7 +289,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "2000-03": {
     "read_file": "cpsa_2000-03.do",
@@ -261,7 +316,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "2001-03": {
     "read_file": "cpsa_2001-03.do",
@@ -283,7 +343,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "2002-03": {
     "read_file": "cpsa_2002-03.do",
@@ -305,7 +370,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "2003-03": {
     "read_file": "cpsa_2003-03.do",
@@ -327,7 +397,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "2004-03": {
     "read_file": "cpsa_2004-03.do",
@@ -349,7 +424,12 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "h_idnum",
+      "h_hhnum",
+      "a_lineno"
+    ]
   },
   "2005-03": {
     "read_file": "cpsa_2005-03.do",
@@ -371,7 +451,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2006-03": {
     "read_file": "cpsa_2006-03.do",
@@ -393,7 +476,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2007-03": {
     "read_file": "cpsa_2007-03.do",
@@ -415,7 +501,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2008-03": {
     "read_file": "cpsa_2008-03.do",
@@ -437,7 +526,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2009-03": {
     "read_file": "cpsa_2009-03.do",
@@ -459,7 +551,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2010-03": {
     "read_file": "cpsa_2010-03.do",
@@ -481,7 +576,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2011-03": {
     "read_file": "cpsa_2011-03.do",
@@ -503,7 +601,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2012-03": {
     "read_file": "cpsa_2012-03.do",
@@ -525,7 +626,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2013-03": {
     "read_file": "cpsa_2013-03.do",
@@ -547,7 +651,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2014-03": {
     "read_file": "cpsa_2014-03.do",
@@ -569,7 +676,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2015-03": {
     "read_file": "cpsa_2015-03.do",
@@ -591,7 +701,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2016-03": {
     "read_file": "cpsa_2016-03.do",
@@ -613,7 +726,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2017-03": {
     "read_file": "cpsa_2017-03.do",
@@ -635,7 +751,10 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   },
   "2018-03": {
     "read_file": "cpsa_2018-03.do",
@@ -657,6 +776,9 @@
       "weight_personal": "a_fnlwgt",
       "weight_earnings": "a_ernlwt",
       "weight_supplement": "marsupwt"
-    }
+    },
+    "identifier": [
+      "peridnum"
+    ]
   }
 }

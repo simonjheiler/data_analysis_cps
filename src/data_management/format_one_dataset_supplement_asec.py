@@ -117,6 +117,17 @@ def _clean_one_dataset_yearly(df, specs):
 
     cols_out = cols_int + cols_int8 + cols_str + cols_categorical + cols_numeric
 
+    # read in columns used to construct match identifier
+    cols_match = specs["identifier"]
+
+    # create longitudinal match identifier
+    df.loc[:, "match_identifier"] = df.loc[:, cols_match[0]].astype(str)
+    for col in cols_match[1:]:
+        df.loc[:, "match_identifier"] += df.loc[:, col].astype(str)
+
+    # set identifier as index
+    df.set_index("match_identifier", inplace=True)
+
     # rename variables to uniform labels
     var_dict = specs["var_dict"]
     var_dict = {v: k for k, v in var_dict.items()}

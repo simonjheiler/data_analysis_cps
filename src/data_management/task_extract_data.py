@@ -7,7 +7,7 @@ from src.config import ROOT
 from src.config import SRC
 
 stata_instructions = []
-for survey_name in ["basic_monthly", "supplement_tenure", "supplement_asec"]:
+for survey_name in ["supplement_asec"]:
 
     # load data specs and file names
     in_path = SRC / "data_specs" / "data_specs" / survey_name
@@ -41,7 +41,7 @@ for survey_name in ["basic_monthly", "supplement_tenure", "supplement_asec"]:
                 ["src", "data_specs", "data_dicts", survey_name, tmp["data_dict"]]
             ),
             "path_out": "/".join(["bld", "out", "data", survey_name]) + "/",
-            "variables": "-".join(list(tmp["var_dict"].values())),
+            "variables": "-".join(list(tmp["var_dict"].values()) + tmp["identifier"]),
         }
         stata_instructions.append(tmp_instructions)
 

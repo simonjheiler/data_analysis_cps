@@ -40,7 +40,7 @@ def _filter_vardict_cps(vardict, varlist):
     return out
 
 
-def _write_data_specs_cps_basic_monthly(instructions, description):
+def _write_data_specs_cps(instructions, description):
 
     date_start = instructions["date_start"]
     date_end = instructions["date_end"]
@@ -77,62 +77,6 @@ def _write_data_specs_cps_basic_monthly(instructions, description):
     specs_out = specs_out.to_dict("index")
 
     return specs_out
-
-
-def _write_data_specs_cps_supplement(instructions, description):
-
-    date_start = instructions["date_start"]
-    date_end = instructions["date_end"]
-    var_list = instructions["variables"]
-    prefix = instructions["prefix"]
-    frequency = instructions["frequency"]
-
-    surveys_selected = (
-        pd.date_range(start=date_start, end=date_end, freq=frequency)
-        .strftime("%Y-%m")
-        .tolist()
-    )
-
-    data_desc = pd.DataFrame.from_dict(description, orient="index")
-    data_desc["period"] = pd.to_datetime(data_desc.index)
-    data_desc["var_dict"] = data_desc["var_dict"].apply(
-        _filter_vardict_cps, args=[var_list]
-    )
-
-    specs_out = pd.DataFrame(index=surveys_selected)
-    specs_out["in_dir"] = prefix + "_" + specs_out.index
-    if prefix == "cpsb":
-        specs_out["in_file"] = (
-            pd.to_datetime(specs_out.index).strftime("%b%y").str.lower() + "pub"
-        )
-    else:
-        specs_out["in_file"] = prefix + "_" + specs_out.index
-    specs_out["out_name"] = prefix + "_" + specs_out.index
-    specs_out["period"] = pd.to_datetime(specs_out.index)
-
-    specs_out = pd.merge_asof(specs_out, data_desc, on="period")
-    specs_out.index = specs_out["period"].dt.strftime("%Y-%m")
-    specs_out = specs_out.drop(columns="period")
-    specs_out = specs_out.to_dict("index")
-
-    return specs_out
-
-
-def _write_data_specs_cps(survey, instructions, description):
-
-    if survey == "basic_monthly":
-        data_specs = _write_data_specs_cps_basic_monthly(instructions, description)
-    elif survey == "supplement_asec":
-        data_specs = _write_data_specs_cps_supplement(instructions, description)
-    elif survey == "supplement_tenure":
-        data_specs = _write_data_specs_cps_supplement(instructions, description)
-    else:
-        raise ValueError(
-            f"survey name {survey} unknown;"
-            " please choose one of ['basic_monthly', 'supplement_asec', 'supplement_tenure']"
-        )
-
-    return data_specs
 
 
 #####################################################
@@ -144,11 +88,8 @@ if __name__ == "__main__":
     surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
 
     for survey_name in surveys:
-        prefix = cps_data_instructions[survey_name]["prefix"]
-
         # get data specs
         data_specs = _write_data_specs_cps(
-            survey_name,
             cps_data_instructions[survey_name],
             cps_data_descriptions[survey_name],
         )
@@ -160,7 +101,7 @@ if __name__ == "__main__":
                 / "data_specs"
                 / "data_specs"
                 / survey_name
-                / f"{prefix}_{dataset}.json",
+                / f"{cps_data_instructions[survey_name]['prefix']}_{dataset}.json",
                 "w",
             ) as outfile:
                 json.dump(data_specs[dataset], outfile, ensure_ascii=False, indent=2)

@@ -76,7 +76,7 @@ def task_get_data_specs(depends_on, produces, survey_name):
     instructions = json.load(open(depends_on["instructions"]))[survey_name]
     description = json.load(open(depends_on["description"]))
 
-    data_specs = _write_data_specs_cps(survey_name, instructions, description)
+    data_specs = _write_data_specs_cps(instructions, description)
 
     # write individual specification files to build directory
     for dataset in data_specs:

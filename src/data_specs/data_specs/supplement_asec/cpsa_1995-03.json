@@ -19,5 +19,10 @@
     "weight_personal": "a_fnlwgt",
     "weight_earnings": "a_ernlwt",
     "weight_supplement": "marsupwt"
-  }
+  },
+  "identifier": [
+    "h_idnum",
+    "h_hhnum",
+    "pulineno"
+  ]
 }

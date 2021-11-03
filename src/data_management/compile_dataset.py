@@ -46,7 +46,6 @@ dtypes_dict = {
         "weight_supplement": str,
     },
     "supplement_tenure": {
-        "id": int,
         "year": int,
         "state": str,
         "sex": str,
@@ -113,7 +112,6 @@ def _compile_long_df_supplement_tenure(in_data, out_path):
         tmp_df = pd.read_csv(
             dataset,
             dtype=dtypes,
-            index_col=specs["var_dict"]["id"],
         )
 
         # format data
