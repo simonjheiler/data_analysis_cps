@@ -109,10 +109,10 @@ def _clean_one_dataset_yearly(df, specs):
     cols_int8 = ["age"]
     cols_str = ["state", "sex"]
     cols_categorical = [
-        "education_reduced",
-        "marital_status_reduced",
-        "race_reduced",
-        "labor_force_status_reduced",
+        "education",
+        "marital_status",
+        "race",
+        "labor_force_status",
     ]
 
     cols_out = cols_int + cols_int8 + cols_str + cols_categorical + cols_numeric
@@ -142,6 +142,9 @@ def _clean_one_dataset_yearly(df, specs):
             "5th Grade to 12th Grade without Diploma": "Less than a High School Diploma",
         }
     )
+
+    # drop unused columns
+    df = df.drop(columns=["education", "marital_status", "race", "labor_force_status"])
 
     # rename columns
     df = df.rename(

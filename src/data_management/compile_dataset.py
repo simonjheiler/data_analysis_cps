@@ -28,14 +28,17 @@ data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.j
 
 dtypes_dict = {
     "supplement_asec": {
+        "id": int,
         "year": int,
         "state": str,
         "sex": str,
         "age": int,
         "education": str,
+        "grade_completed": str,
         "labor_force_status": str,
         "race": str,
         "marital_status": str,
+        "citizenship_status": str,
         "earnings_weekly": str,
         "hours_worked": str,
         "weight_personal": str,
@@ -183,7 +186,7 @@ def _compile_long_df_supplement_asec(in_data, out_path):
         tmp_df = pd.read_csv(
             dataset,
             dtype=dtypes,
-            index_col=specs["var_dict"]["id"],
+            # index_col=specs["var_dict"]["id"],
         )
 
         # format data

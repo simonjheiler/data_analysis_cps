@@ -14,15 +14,17 @@ from src.config import SRC
 cps_data_instructions = json.load(
     open(SRC / "data_specs" / "cps_data_instructions.json")
 )
-cps_description_basic_monthly = json.load(
-    open(SRC / "data_specs" / "cps_data_description_basic_monthly.json")
-)
-cps_description_supplement_asec = json.load(
-    open(SRC / "data_specs" / "cps_data_description_supplement_asec.json")
-)
-cps_description_supplement_tenure = json.load(
-    open(SRC / "data_specs" / "cps_data_description_supplement_tenure.json")
-)
+cps_data_descriptions = {
+    "basic_monthly": json.load(
+        open(SRC / "data_specs" / "cps_data_description_basic_monthly.json")
+    ),
+    "supplement_asec": json.load(
+        open(SRC / "data_specs" / "cps_data_description_supplement_asec.json")
+    ),
+    "supplement_tenure": json.load(
+        open(SRC / "data_specs" / "cps_data_description_supplement_tenure.json")
+    ),
+}
 
 
 #####################################################
@@ -70,18 +72,19 @@ def _write_data_specs_cps_basic_monthly(instructions, description):
     return specs_out
 
 
-def _write_data_specs_cps_supplement_asec(instructions, description):
+def _write_data_specs_cps_supplement(instructions, description):
 
     date_start = datetime.strptime(instructions["date_start"], "%Y-%m")
     date_end = datetime.strptime(instructions["date_end"], "%Y-%m")
     var_list = instructions["variables"]
+    prefix = instructions["prefix"]
 
     surveys_all = list(description.keys())
     surveys_all = [datetime.strptime(survey, "%Y-%m") for survey in surveys_all]
 
     surveys_selected = []
     for survey in surveys_all:
-        if survey >= date_start and survey <= date_end:
+        if date_start <= survey <= date_end:
             surveys_selected.append(survey)
 
     surveys_selected = [
@@ -94,43 +97,9 @@ def _write_data_specs_cps_supplement_asec(instructions, description):
     )
 
     specs_out = pd.DataFrame(index=surveys_selected)
-    specs_out["in_dir"] = "cpsa_" + specs_out.index
-    specs_out["in_file"] = "cpsa_" + specs_out.index
-    specs_out["out_name"] = "cpsa_" + specs_out.index
-
-    specs_out = specs_out.join(data_desc)
-    specs_out = specs_out.to_dict("index")
-
-    return specs_out
-
-
-def _write_data_specs_cps_supplement_tenure(instructions, description):
-
-    date_start = datetime.strptime(instructions["date_start"], "%Y-%m")
-    date_end = datetime.strptime(instructions["date_end"], "%Y-%m")
-    var_list = instructions["variables"]
-
-    surveys_all = list(description.keys())
-    surveys_all = [datetime.strptime(survey, "%Y-%m") for survey in surveys_all]
-
-    surveys_selected = []
-    for survey in surveys_all:
-        if survey >= date_start and survey <= date_end:
-            surveys_selected.append(survey)
-
-    surveys_selected = [
-        datetime.strftime(survey, "%Y-%m") for survey in surveys_selected
-    ]
-
-    data_desc = pd.DataFrame.from_dict(description, orient="index")
-    data_desc["var_dict"] = data_desc["var_dict"].apply(
-        _filter_vardict_cps, args=[var_list]
-    )
-
-    specs_out = pd.DataFrame(index=surveys_selected)
-    specs_out["in_dir"] = "cpst_" + specs_out.index
-    specs_out["in_file"] = "cpst_" + specs_out.index
-    specs_out["out_name"] = "cpst_" + specs_out.index
+    specs_out["in_dir"] = prefix + "_" + specs_out.index
+    specs_out["in_file"] = prefix + "_" + specs_out.index
+    specs_out["out_name"] = prefix + "_" + specs_out.index
 
     specs_out = specs_out.join(data_desc)
     specs_out = specs_out.to_dict("index")
@@ -143,9 +112,9 @@ def _write_data_specs_cps(survey, instructions, description):
     if survey == "basic_monthly":
         data_specs = _write_data_specs_cps_basic_monthly(instructions, description)
     elif survey == "supplement_asec":
-        data_specs = _write_data_specs_cps_supplement_asec(instructions, description)
+        data_specs = _write_data_specs_cps_supplement(instructions, description)
     elif survey == "supplement_tenure":
-        data_specs = _write_data_specs_cps_supplement_tenure(instructions, description)
+        data_specs = _write_data_specs_cps_supplement(instructions, description)
     else:
         raise ValueError(
             f"survey name {survey} unknown;"
@@ -161,57 +130,26 @@ def _write_data_specs_cps(survey, instructions, description):
 
 if __name__ == "__main__":
 
-    # get data specs
-    data_specs_basic_monthly = _write_data_specs_cps_basic_monthly(
-        cps_data_instructions["basic_monthly"], cps_description_basic_monthly
-    )
-    data_specs_supplement_asec = _write_data_specs_cps_supplement_asec(
-        cps_data_instructions["supplement_asec"], cps_description_supplement_asec
-    )
-    data_specs_supplement_tenure = _write_data_specs_cps_supplement_tenure(
-        cps_data_instructions["supplement_tenure"], cps_description_supplement_tenure
-    )
+    surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
 
-    # write individual specification files to build directory
-    for dataset in data_specs_basic_monthly:
-        with open(
-            SRC
-            / "data_specs"
-            / "data_specs"
-            / "basic_monthly"
-            / f"cpsb_{dataset}.json",
-            "w",
-        ) as outfile:
-            json.dump(
-                data_specs_basic_monthly[dataset], outfile, ensure_ascii=False, indent=2
-            )
-    for dataset in data_specs_supplement_asec:
-        with open(
-            SRC
-            / "data_specs"
-            / "data_specs"
-            / "supplement_asec"
-            / f"cpsa_{dataset}.json",
-            "w",
-        ) as outfile:
-            json.dump(
-                data_specs_supplement_asec[dataset],
-                outfile,
-                ensure_ascii=False,
-                indent=2,
-            )
-    for dataset in data_specs_supplement_tenure:
-        with open(
-            SRC
-            / "data_specs"
-            / "data_specs"
-            / "supplement_tenure"
-            / f"cpst_{dataset}.json",
-            "w",
-        ) as outfile:
-            json.dump(
-                data_specs_supplement_tenure[dataset],
-                outfile,
-                ensure_ascii=False,
-                indent=2,
-            )
+    for survey_name in surveys:
+        prefix = cps_data_instructions[survey_name]["prefix"]
+
+        # get data specs
+        data_specs = _write_data_specs_cps(
+            survey_name,
+            cps_data_instructions[survey_name],
+            cps_data_descriptions[survey_name],
+        )
+
+        # write individual specification files to build directory
+        for dataset in data_specs:
+            with open(
+                SRC
+                / "data_specs"
+                / "data_specs"
+                / survey_name
+                / f"{prefix}_{dataset}.json",
+                "w",
+            ) as outfile:
+                json.dump(data_specs[dataset], outfile, ensure_ascii=False, indent=2)
