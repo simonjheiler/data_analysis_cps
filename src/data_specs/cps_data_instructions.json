@@ -2,6 +2,7 @@
   "basic_monthly": {
     "date_start": "2000-01",
     "date_end": "2020-06",
+    "frequency": "1MS",
     "prefix": "cpsb",
     "variables": [
       "year",
@@ -29,9 +30,9 @@
   "supplement_asec": {
     "date_start": "1989-03",
     "date_end": "2018-03",
+    "frequency": "12MS",
     "prefix": "cpsa",
     "variables": [
-      "id",
       "year",
       "state",
       "sex",
@@ -52,9 +53,9 @@
   "supplement_tenure": {
     "date_start": "2002-01",
     "date_end": "2018-01",
+    "frequency": "24MS",
     "prefix": "cpst",
     "variables": [
-      "id",
       "year",
       "state",
       "sex",

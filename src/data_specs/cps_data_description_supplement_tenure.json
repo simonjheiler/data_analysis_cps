@@ -3,7 +3,6 @@
     "read_file": "cpst_2002-01.do",
     "data_dict": "cpst_2002-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -18,13 +17,17 @@
       "hours_worked": "pesce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2004-01": {
     "read_file": "cpst_2004-01.do",
     "data_dict": "cpst_2004-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -39,13 +42,17 @@
       "hours_worked": "pesce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2006-01": {
     "read_file": "cpst_2006-01.do",
     "data_dict": "cpst_2006-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -60,13 +67,17 @@
       "hours_worked": "pesce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2008-01": {
     "read_file": "cpst_2008-01.do",
     "data_dict": "cpst_2008-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -81,13 +92,17 @@
       "hours_worked": "pesce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2010-01": {
     "read_file": "cpst_2010-01.do",
     "data_dict": "cpst_2010-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -102,13 +117,17 @@
       "hours_worked": "pesce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2012-01": {
     "read_file": "cpst_2012-01.do",
     "data_dict": "cpst_2012-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -123,13 +142,17 @@
       "hours_worked": "ptsce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2014-01": {
     "read_file": "cpst_2014-01.do",
     "data_dict": "cpst_2014-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestcen",
       "sex": "pesex",
@@ -144,13 +167,17 @@
       "hours_worked": "ptsce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2016-01": {
     "read_file": "cpst_2016-01.do",
     "data_dict": "cpst_2016-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestfips",
       "sex": "pesex",
@@ -165,13 +192,17 @@
       "hours_worked": "ptsce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   },
   "2018-01": {
     "read_file": "cpst_2018-01.do",
     "data_dict": "cpst_2018-01.dct",
     "var_dict": {
-      "id": "hrhhid",
       "year": "hryear4",
       "state": "gestfips",
       "sex": "pesex",
@@ -186,6 +217,11 @@
       "hours_worked": "ptsce5o",
       "eligibility": "prtensat",
       "weight": "pwsswgt"
-    }
+    },
+    "identifier": [
+      "hrhhid",
+      "hrhhid2",
+      "pulineno"
+    ]
   }
 }

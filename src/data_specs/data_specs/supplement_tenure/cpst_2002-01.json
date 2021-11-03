@@ -5,7 +5,6 @@
   "read_file": "cpst_2002-01.do",
   "data_dict": "cpst_2002-01.dct",
   "var_dict": {
-    "id": "hrhhid",
     "year": "hryear4",
     "state": "gestcen",
     "sex": "pesex",
@@ -19,5 +18,10 @@
     "earnings_weekly": "prernwa",
     "hours_worked": "pesce5o",
     "weight": "pwsswgt"
-  }
+  },
+  "identifier": [
+    "hrhhid",
+    "hrhhid2",
+    "pulineno"
+  ]
 }
