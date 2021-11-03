@@ -6,8 +6,8 @@ education from CPS data.
 # read in arguments (1: path input file, 2: path output file)
 args <- commandArgs(trailingOnly=TRUE)
 # args <- c(
-#   "C:\\Users\\simon\\Documents\\sync_uni\\Projects\\data_analysis_cps\\bld\\out\\data\\supplement_tenure.csv",
-#   "C:\\Users\\simon\\Documents\\sync_uni\\Projects\\data_analysis_cps\\bld\\out\\results\\cps_returns_to_tenure.csv"
+#   "C:\\Users\\user\\projects\\data_analysis_cps\\bld\\out\\data\\cps_supplement_tenure_extract.csv",
+#   "C:\\Users\\user\\projects\\data_analysis_cps\\bld\\out\\results\\cps_returns_to_tenure.csv"
 # )
 
 # load required packages
@@ -33,7 +33,6 @@ df <- drop_na(df, c(
   "education",
   "age_group",
   "marital_status",
-  "citizenship_status",
   "race",
   "weight"
 ))
@@ -66,7 +65,7 @@ df$log_earnings <- log(df$earnings_weekly_deflated)
 # estimate linear model of returns to tenure
 model_tenure <- lm(log_earnings ~ education_reduced * tenure
   + education_reduced * I(tenure^2)
-  + age + I(age^2) + year + state + marital_status + citizenship_status + race,
+  + age + I(age^2) + year + state + marital_status + race,
                      weights = weight,
                      data=df
 )
