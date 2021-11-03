@@ -244,7 +244,7 @@ def _deflate_payments(df, cols, base):
 
 if __name__ == "__main__":
 
-    survey_name = "supplement_tenure"
+    survey_name = "supplement_asec"
 
     infiles = os.listdir(BLD / "out" / "data" / survey_name)
 
