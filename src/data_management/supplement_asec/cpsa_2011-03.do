@@ -1842,11 +1842,13 @@ label define a_exprrp
 	13          "Partner/roommate"
 	14          "Nonrelative without relatives"
 ;
+/*
 label values a_age    a_age;
 label define a_age
 	80          "80-84 years of age"
 	85          "85+ years of age"
 ;
+*/
 label values a_maritl a_maritl;
 label define a_maritl
 	1           "Married - civilian spouse present"

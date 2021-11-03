@@ -429,11 +429,13 @@ label values peparent peparent;
 label define peparent
 	-1          "NO PARENT"
 ;
+/*
 label values peage    peage;
 label define peage
 	80          "80-84 Years Old"
 	85          "85+ Years Old"
 ;
+*/
 label values prtfage  prtfage;
 label define prtfage
 	0           "NO TOP CODE"

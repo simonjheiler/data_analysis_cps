@@ -6,7 +6,7 @@ import pytask
 
 from src.config import BLD
 
-data = BLD / "out" / "data" / "cps_extract_supplement_tenure.csv"
+data = BLD / "out" / "data" / "cps_supplement_tenure_extract.csv"
 prod = BLD / "out" / "results" / "cps_returns_to_tenure.csv"
 
 

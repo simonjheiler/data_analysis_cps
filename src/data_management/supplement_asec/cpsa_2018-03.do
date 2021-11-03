@@ -2037,11 +2037,13 @@ label define perrp
 	17          "Roomer/boarder w/rels."
 	18          "Roomer/boarder w/o rels."
 ;
+/*
 label values a_age    a_age;
 label define a_age
 	80          "80-84 years of age"
 	85          "85+ years of age"
 ;
+*/
 label values a_maritl a_maritl;
 label define a_maritl
 	1           "Married - civilian spouse present"

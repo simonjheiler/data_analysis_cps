@@ -7,7 +7,7 @@ from src.config import ROOT
 from src.config import SRC
 
 stata_instructions = []
-for survey_name in ["supplement_tenure", "supplement_asec"]:
+for survey_name in ["basic_monthly", "supplement_tenure", "supplement_asec"]:
 
     # load data specs and file names
     in_path = SRC / "data_specs" / "data_specs" / survey_name

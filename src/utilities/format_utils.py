@@ -266,9 +266,9 @@ def _add_categorical_variables(df):
     )
 
     # citizenship status
-    df.loc[:, "citizenship_status_reduced"] = df["citizenship_status"].replace(
-        citship_reduced_cat
-    )
+    # df.loc[:, "citizenship_status_reduced"] = df["citizenship_status"].replace(
+    #     citship_reduced_cat
+    # )
 
     return df
 
