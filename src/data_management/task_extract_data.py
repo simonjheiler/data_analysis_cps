@@ -25,15 +25,14 @@ for survey_name in ["basic_monthly", "supplement_tenure", "supplement_asec"]:
             "do": SRC / "data_management" / "extract_data.do",
             "deps": [
                 spec_path,
-                SRC / "original_data" / survey_name / f"{tmp['in_name']}.zip",
+                SRC / "original_data" / survey_name / f"{tmp['in_dir']}.zip",
                 SRC / "data_management" / survey_name / tmp["read_file"],
                 SRC / "data_specs" / "data_dicts" / survey_name / tmp["data_dict"],
             ],
-            "file_name": in_file_name,
+            "in_dir": tmp["in_dir"],
+            "in_file": tmp["in_file"],
             "path_project": str(ROOT) + "/",
-            "path_log_inner": "/".join(["bld", "out", "data", survey_name, "log"])
-            + "/",
-            "path_log_outer": "/".join(["bld", "out", "data", "log"]) + "/",
+            "path_log": "/".join(["bld", "out", "data", survey_name, "log"]) + "/",
             "path_data": "/".join(["src", "original_data", survey_name]) + "/",
             "path_do": "/".join(
                 ["src", "data_management", survey_name, tmp["read_file"]]
@@ -54,10 +53,10 @@ for survey_name in ["basic_monthly", "supplement_tenure", "supplement_asec"]:
             [
                 str(x)
                 for x in [
-                    s["file_name"],
+                    s["in_dir"],
+                    s["in_file"],
                     s["path_project"],
-                    s["path_log_inner"],
-                    s["path_log_outer"],
+                    s["path_log"],
                     s["path_data"],
                     s["path_do"],
                     s["path_dict"],
@@ -67,11 +66,8 @@ for survey_name in ["basic_monthly", "supplement_tenure", "supplement_asec"]:
             ],
             [s["do"], *s["deps"]],
             [
-                ROOT / s["path_log_inner"] / f"{s['file_name']}.log",
-                ROOT
-                / s["path_log_outer"]
-                / f"extract_data_{survey_name}_{s['file_name']}.log",
-                ROOT / s["path_out"] / f"{s['file_name']}.csv",
+                ROOT / s["path_log"] / f"{s['in_dir']}.log",
+                ROOT / s["path_out"] / f"{s['in_dir']}.csv",
             ],
         )
         for s in stata_instructions

@@ -1,5 +1,6 @@
 {
-  "in_name": "cpst_2012-01",
+  "in_dir": "cpst_2012-01",
+  "in_file": "cpst_2012-01",
   "out_name": "cpst_2012-01",
   "read_file": "cpst_2012-01.do",
   "data_dict": "cpst_2012-01.dct",

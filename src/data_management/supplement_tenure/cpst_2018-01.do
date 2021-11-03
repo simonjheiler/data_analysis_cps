@@ -1,15 +1,7 @@
-capture log close
-
-local log_file `1'
-local in_file `2'
-local out_file `3'
-local data_dict `4'
-local variables `5'
-
-display `"`variables'"'
-display `"`data_dict'"'
-
-log using `log_file', replace
+local in_file `1'
+local out_file `2'
+local data_dict `3'
+local variables `4'
 
 /*------------------------------------------------
   developed by Jean Roth

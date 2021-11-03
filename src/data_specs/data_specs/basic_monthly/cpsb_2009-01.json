@@ -1,5 +1,6 @@
 {
-  "in_name": "jan09pub",
+  "in_dir": "cpsb_2009-01",
+  "in_file": "jan09pub",
   "out_name": "cpsb_2009-01",
   "read_file": "cpsb_2009-01.do",
   "data_dict": "cpsb_2009-01.dct",

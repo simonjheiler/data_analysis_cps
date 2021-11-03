@@ -1,5 +1,6 @@
 {
-  "in_name": "dec14pub",
+  "in_dir": "cpsb_2014-12",
+  "in_file": "dec14pub",
   "out_name": "cpsb_2014-12",
   "read_file": "cpsb_2014-04.do",
   "data_dict": "cpsb_2014-04.dct",

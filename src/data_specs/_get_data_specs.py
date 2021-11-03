@@ -59,7 +59,8 @@ def _write_data_specs_cps_basic_monthly(instructions, description):
         ),
         columns=["period"],
     )
-    specs_out["in_name"] = specs_out["period"].dt.strftime("%b%y").str.lower() + "pub"
+    specs_out["in_dir"] = "cpsb_" + specs_out["period"].dt.strftime("%Y-%m")
+    specs_out["in_file"] = specs_out["period"].dt.strftime("%b%y").str.lower() + "pub"
     specs_out["out_name"] = "cpsb_" + specs_out["period"].dt.strftime("%Y-%m")
     specs_out = pd.merge_asof(specs_out, data_desc, on="period")
     specs_out.set_index(specs_out["period"].dt.strftime("%Y-%m"), inplace=True)
@@ -93,7 +94,8 @@ def _write_data_specs_cps_supplement_asec(instructions, description):
     )
 
     specs_out = pd.DataFrame(index=surveys_selected)
-    specs_out["in_name"] = "cpsa_" + specs_out.index
+    specs_out["in_dir"] = "cpsa_" + specs_out.index
+    specs_out["in_file"] = "cpsa_" + specs_out.index
     specs_out["out_name"] = "cpsa_" + specs_out.index
 
     specs_out = specs_out.join(data_desc)
@@ -126,7 +128,8 @@ def _write_data_specs_cps_supplement_tenure(instructions, description):
     )
 
     specs_out = pd.DataFrame(index=surveys_selected)
-    specs_out["in_name"] = "cpst_" + specs_out.index
+    specs_out["in_dir"] = "cpst_" + specs_out.index
+    specs_out["in_file"] = "cpst_" + specs_out.index
     specs_out["out_name"] = "cpst_" + specs_out.index
 
     specs_out = specs_out.join(data_desc)

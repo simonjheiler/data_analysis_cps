@@ -1,5 +1,6 @@
 {
-  "in_name": "cpsa_2002-03",
+  "in_dir": "cpsa_2002-03",
+  "in_file": "cpsa_2002-03",
   "out_name": "cpsa_2002-03",
   "read_file": "cpsa_2002-03.do",
   "data_dict": "cpsa_2002-03.dct",

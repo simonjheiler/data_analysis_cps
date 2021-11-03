@@ -1,28 +1,22 @@
-capture log close
-log using cpsfeb96.log, replace
-set mem 500m
+local in_file `1'
+local out_file `2'
+local data_dict `3'
+local variables `4'
 
 /*------------------------------------------------
-  by Jean Roth Wed Nov  4 16:52:55 EST 2009
-  Please report errors to jroth@nber.org
+  developed by Jean Roth
+  edited by Simon Heiler Fri Aug 13 18:00:00 CEST 2021
   NOTE:  This program is distributed under the GNU GPL.
   See end of this file and http://www.gnu.org/licenses/ for details.
-  Run with do cpsfeb96
 ----------------------------------------------- */
 
-/* The following line should contain
-   the complete path and name of the raw data file.
-   On a PC, use backslashes in paths as in C:\  */
+/* The following line should contain the path to the raw data file */
 
-local dat_name "/homes/data/cps/cpsfeb96.dat"
-
-/* The following line should contain the path to your output '.dta' file */
-
-local dta_name "cpsfeb1996.dta"
+local dat_name `in_file'
 
 /* The following line should contain the path to the data dictionary file */
 
-local dct_name "cpsfeb96.dct"
+local dct_name `data_dict'
 
 /* The line below does NOT need to be changed */
 
