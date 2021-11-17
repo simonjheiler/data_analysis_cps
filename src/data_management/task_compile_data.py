@@ -10,7 +10,7 @@ surveys = ["supplement_asec", "supplement_tenure"]
 
 
 @pytask.mark.parametrize(
-    "data, prod, survey_name",
+    "depends_on, produces, survey_name",
     [
         (
             [
@@ -24,5 +24,5 @@ surveys = ["supplement_asec", "supplement_tenure"]
         for survey in surveys
     ],
 )
-def task_compile_data(data, prod, survey_name):
-    _compile_long_df(data, prod, survey_name)
+def task_compile_data(depends_on, produces, survey_name):
+    _compile_long_df(depends_on, produces, survey_name)
