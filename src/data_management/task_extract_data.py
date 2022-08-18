@@ -40,38 +40,38 @@ for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
             "path_dict": "/".join(
                 ["src", "data_specs", "data_dicts", survey_name, tmp["data_dict"]]
             ),
-            "path_out": "/".join(["bld", "out", "data", survey_name]) + "/",
+            "path_out": "/".join(["bld", "out", "data", survey_name, "raw"]) + "/",
             "variables": "-".join(list(tmp["var_dict"].values()) + tmp["identifier"]),
         }
         stata_instructions.append(tmp_instructions)
 
 
-@pytask.mark.parametrize(
-    "stata, depends_on, produces",
-    [
-        (
-            [
-                str(x)
-                for x in [
-                    s["in_dir"],
-                    s["in_file"],
-                    s["path_project"],
-                    s["path_log"],
-                    s["path_data"],
-                    s["path_do"],
-                    s["path_dict"],
-                    s["path_out"],
-                    s["variables"],
-                ]
-            ],
-            [s["do"], *s["deps"]],
-            [
-                ROOT / s["path_log"] / f"{s['in_dir']}.log",
-                ROOT / s["path_out"] / f"{s['in_dir']}.csv",
-            ],
-        )
-        for s in stata_instructions
-    ],
-)
-def task_extract_data():
-    pass
+for s in stata_instructions:
+
+    @pytask.mark.task
+    @pytask.mark.stata(
+        script=s["do"],
+        options=[
+            str(x)
+            for x in [
+                s["in_dir"],
+                s["in_file"],
+                s["path_project"],
+                s["path_log"],
+                s["path_data"],
+                s["path_do"],
+                s["path_dict"],
+                s["path_out"],
+                s["variables"],
+            ]
+        ],
+    )
+    @pytask.mark.depends_on([s["do"], *s["deps"]])
+    @pytask.mark.produces(
+        [
+            ROOT / s["path_log"] / f"{s['in_dir']}.log",
+            ROOT / s["path_out"] / f"{s['in_dir']}_raw.csv",
+        ]
+    )
+    def task_extract_data():
+        pass
