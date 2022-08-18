@@ -110,7 +110,7 @@ def _compile_flow_rates_df():
     )
 
     # remove matched information for entries with no_match flag
-    merge_df[merge_df.no_match == 1].loc[:, "labor_force_status_reduced_to"] = np.nan
+    merge_df[merge_df.no_match == 1].loc[:, "labor_force_status_reduced"] = np.nan
 
     # reduce educational attainment to four categories
     merge_df.loc[:, "education_reduced"] = merge_df["education_reduced"].replace(
@@ -132,56 +132,65 @@ def _compile_flow_rates_df():
     )
 
     # calculate transitions
-    # transition, dist_init, dist_final = _get_transitions(
-    #     merge_df["labor_force_status_reduced_12m"],
-    #     merge_df["labor_force_status_reduced"],
-    #     merge_df["weight_long"],
-    # )
+    merge_df.loc[:, "employed"] = merge_df.labor_force_status_reduced == "employed"
+    merge_df.loc[:, "unemployed"] = merge_df.labor_force_status_reduced == "unemployed"
+    merge_df.loc[:, "employed_12m"] = (
+        merge_df.labor_force_status_reduced_12m == "employed"
+    )
+    merge_df.loc[:, "unemployed_12m"] = (
+        merge_df.labor_force_status_reduced_12m == "unemployed"
+    )
+    merge_df.loc[:, "transition_eu"] = merge_df.employed_12m * merge_df.unemployed
+    merge_df.loc[:, "transition_ue"] = merge_df.unemployed_12m * merge_df.employed
 
-    # try:
-    #     flow_rates.loc[period, idx[:, "all"]] = transition.stack().values
-    # except ValueError:
-    #     flow_rates.loc[period, idx[:, "all"]] = np.full(
-    #         [transition.shape[0] * transition.shape[1]], np.nan
-    #     )
-    #
-    # for group in education_groups[1:]:
-    #     transition, dist_init, dist_final = _get_transitions(
-    #         merge_df["labor_force_status_reduced_from"][
-    #             merge_df["education_reduced"] == group
-    #         ],
-    #         merge_df["labor_force_status_reduced_to"][
-    #             merge_df["education_reduced"] == group
-    #         ],
-    #         merge_df["weight_long_from"][merge_df["education_reduced"] == group],
-    #     )
-    #
-    #     try:
-    #         flow_rates.loc[period, idx[:, group]] = transition.stack().values
-    #     except ValueError:
-    #         flow_rates.loc[period, idx[:, group]] = np.full(
-    #             [transition.shape[0] * transition.shape[1]], np.nan
-    #         )
-    #
-    # # align series names and reduce index to single column level
-    # flow_rates = flow_rates.rename(
-    #     columns={
-    #         "all": "",
-    #         "Less than a High School Diploma": "_edu_1",
-    #         "High School Graduates, No College": "_edu_2",
-    #         "Some College or Associate Degree": "_edu_3",
-    #         "Bachelor's degree and higher": "_edu_4",
-    #     }
-    # )
-    # flow_rates.columns = [
-    #     col[0] + col[1]
-    #     for col in zip(
-    #         flow_rates.columns.get_level_values(0),
-    #         flow_rates.columns.get_level_values(1),
-    #     )
-    # ]
+    merge_df.loc[:, "employed_weighted"] = merge_df.employed * merge_df.weight_long
+    merge_df.loc[:, "unemployed_weighted"] = merge_df.unemployed * merge_df.weight_long
+    merge_df.loc[:, "employed_12m_weighted"] = (
+        merge_df.employed_12m * merge_df.weight_long
+    )
+    merge_df.loc[:, "unemployed_12m_weighted"] = (
+        merge_df.unemployed_12m * merge_df.weight_long
+    )
+    merge_df.loc[:, "transition_eu_weighted"] = (
+        merge_df.transition_eu * merge_df.weight_long
+    )
+    merge_df.loc[:, "transition_ue_weighted"] = (
+        merge_df.transition_ue * merge_df.weight_long
+    )
 
-    return merge_df
+    df_out = (
+        merge_df.loc[
+            :,
+            [
+                "age_group",
+                "employed_weighted",
+                "unemployed_weighted",
+                "employed_12m_weighted",
+                "unemployed_12m_weighted",
+                "transition_eu_weighted",
+                "transition_ue_weighted",
+            ],
+        ]
+        .groupby(["age_group"])
+        .sum()
+    )
+
+    df_out = df_out.rename(
+        columns={
+            "employed_weighted": "employed",
+            "unemployed_weighted": "unemployed",
+            "employed_12m_weighted": "employed_12m",
+            "unemployed_12m_weighted": "unemployed_12m",
+            "transition_eu_weighted": "transition_eu",
+            "transition_ue_weighted": "transition_ue",
+        }
+    )
+
+    df_out.loc[:, "u_rate"] = df_out.unemployed / (df_out.employed + df_out.unemployed)
+    df_out.loc[:, "eu_rate"] = df_out.transition_eu / df_out.employed_12m
+    df_out.loc[:, "ue_rate"] = df_out.transition_ue / df_out.unemployed_12m
+
+    return df_out
 
 
 def _get_transitions(var_from, var_to, weights):
