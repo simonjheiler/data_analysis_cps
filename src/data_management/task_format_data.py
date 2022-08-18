@@ -1,5 +1,5 @@
 import json
-import os
+from datetime import datetime
 
 import pandas as pd
 import pytask
@@ -12,14 +12,19 @@ from src.data_management.format_one_dataset_basic_monthly import (
 
 NO_RAW_FILES = False
 
+data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
+
 for survey_name in ["basic_monthly"]:
 
-    # load data specs and file names
-    in_path = BLD / "out" / "data" / survey_name / "raw"
-    in_files = list(in_path.glob("cps*_*_raw.csv"))
-    in_names = [
-        os.path.basename(file).split(".")[0].replace("_raw", "") for file in in_files
-    ]
+    date_start = datetime.strptime(
+        data_instructions[survey_name]["date_start"], "%Y-%m"
+    )
+    date_end = datetime.strptime(data_instructions[survey_name]["date_end"], "%Y-%m")
+    frequency = data_instructions[survey_name]["frequency"]
+    prefix = data_instructions[survey_name]["prefix"]
+
+    file_names = pd.date_range(date_start, date_end, freq=frequency).strftime("%Y-%m")
+    file_names = [f"{prefix}_{file}" for file in file_names]
 
     @pytask.mark.skipif(
         NO_RAW_FILES, reason="Skip extraction from and formatting of raw data files."
@@ -32,7 +37,7 @@ for survey_name in ["basic_monthly"]:
                 BLD / "out" / "data" / survey_name / f"{file_name}.csv",
                 SRC / "data_specs" / "data_specs" / survey_name / f"{file_name}.json",
             )
-            for file_name in in_names
+            for file_name in file_names
         ],
     )
     def task_format_data(depends_on, produces, spec_path):
