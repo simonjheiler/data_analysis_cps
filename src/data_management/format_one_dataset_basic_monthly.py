@@ -5,7 +5,8 @@ import sys
 import numpy as np
 import pandas as pd
 
-from bld.project_paths import project_paths_join as ppj
+from src.config import BLD
+from src.config import SRC
 from src.utilities.format_utils import _add_categorical_variables
 
 
@@ -14,7 +15,7 @@ from src.utilities.format_utils import _add_categorical_variables
 #####################################################
 
 # CPS state codes
-state_codes = pd.read_csv(ppj("IN_DATA", "misc", "cps_us_state_codes.csv"))
+state_codes = pd.read_csv(SRC / "original_data" / "misc" / "cps_us_state_codes.csv")
 state_codes_dict = {
     state_codes.iloc[i, 0]: state_codes.iloc[i, 1] for i in range(state_codes.shape[0])
 }
@@ -194,7 +195,7 @@ def _get_spousal_labor_force_status(df, specs):
         df[identifier_spouse + ["labor_force_status_reduced"]],
         left_on=identifier_self,
         right_on=identifier_spouse,
-        suffixes=["", "_spouse"],
+        suffixes=("", "_spouse"),
         how="left",
     )
 
@@ -242,17 +243,21 @@ if __name__ == "__main__":
     try:
         dataset = sys.argv[1]
     except IndexError:
-        dataset = "cpsb_1989-01"
+        dataset = "cpsb_2000-01"
 
     try:
         name_in = dataset + "_raw.csv"
         name_out = dataset + ".csv"
-        df_in = pd.read_csv(ppj("OUT_DATA", "cps_monthly", "raw", name_in), dtype=str)
+        df_in = pd.read_csv(
+            BLD / "out" / "data" / "basic_monthly" / "raw" / name_in, dtype=str
+        )
         data_specs = json.load(
-            open(ppj("IN_DATA_SPECS", "cps", "specs", "monthly", dataset + ".json"))
+            open(
+                SRC / "data_specs" / "data_specs" / "basic_monthly" / f"{dataset}.json"
+            )
         )
         df_out = _clean_one_dataset_monthly(df_in, data_specs)
-        df_out.to_csv(ppj("OUT_DATA", "cps_monthly", name_out), index=True)
+        df_out.to_csv(BLD / "out" / "data" / "basic_monthly" / name_out, index=True)
         log = dataset + ": " + str(datetime.datetime.now()) + " - OK! \n"
     except FileNotFoundError:
         log = (
@@ -262,27 +267,27 @@ if __name__ == "__main__":
             + " - Error! File not Found. \n"
         )
 
-    try:
-        logfile = open(
-            ppj("OUT_DATA", "cps_monthly", "format_data_cps_monthly_log.txt")
-        )
-        entries = logfile.readlines()
-    except FileNotFoundError:
-        entries = []
-
-    in_log = False
-    for idx, line in enumerate(entries):
-        if dataset in line:
-            entries[idx] = log
-            in_log = True
-
-    if not in_log:
-        entries.append(log)
-
-    entries = [entry for entry in entries if entry != " \n"]
-
-    logfile = open(
-        ppj("OUT_DATA", "cps_monthly", "format_data_cps_monthly_log.txt"), "w"
-    )
-    for line in entries:
-        logfile.write(f"{line}")
+    # try:
+    #     logfile = open(
+    #         ppj("OUT_DATA", "cps_monthly", "format_data_cps_monthly_log.txt")
+    #     )
+    #     entries = logfile.readlines()
+    # except FileNotFoundError:
+    #     entries = []
+    #
+    # in_log = False
+    # for idx, line in enumerate(entries):
+    #     if dataset in line:
+    #         entries[idx] = log
+    #         in_log = True
+    #
+    # if not in_log:
+    #     entries.append(log)
+    #
+    # entries = [entry for entry in entries if entry != " \n"]
+    #
+    # logfile = open(
+    #     ppj("OUT_DATA", "cps_monthly", "format_data_cps_monthly_log.txt"), "w"
+    # )
+    # for line in entries:
+    #     logfile.write(f"{line}")
