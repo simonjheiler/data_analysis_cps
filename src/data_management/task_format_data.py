@@ -10,7 +10,7 @@ from src.data_management.format_one_dataset_basic_monthly import (
     _clean_one_dataset_monthly,
 )
 
-NO_RAW_FILES = False
+NO_RAW_FILES = True
 
 data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
 

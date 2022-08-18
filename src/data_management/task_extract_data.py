@@ -8,7 +8,7 @@ import pytask
 from src.config import ROOT
 from src.config import SRC
 
-NO_RAW_FILES = False
+NO_RAW_FILES = True
 
 data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
 
