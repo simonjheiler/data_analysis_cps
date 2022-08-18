@@ -1,13 +1,29 @@
 import json
 import os
+from datetime import datetime
 
+import pandas as pd
 import pytask
 
 from src.config import ROOT
 from src.config import SRC
 
+NO_RAW_FILES = False
+
+data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
+
 stata_instructions = []
-for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
+for survey_name in ["basic_monthly"]:
+
+    date_start = datetime.strptime(
+        data_instructions[survey_name]["date_start"], "%Y-%m"
+    )
+    date_end = datetime.strptime(data_instructions[survey_name]["date_end"], "%Y-%m")
+    frequency = data_instructions[survey_name]["frequency"]
+    prefix = data_instructions[survey_name]["prefix"]
+
+    file_names = pd.date_range(date_start, date_end, freq=frequency).strftime("%Y-%m")
+    file_names = [f"{prefix}_{file}" for file in file_names]
 
     # load data specs and file names
     in_path = SRC / "data_specs" / "data_specs" / survey_name
@@ -15,10 +31,11 @@ for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
     in_names = [os.path.basename(spec) for spec in in_specs]
 
     # compile stata instructions
-    for spec_path in in_specs:
+    for file_name in file_names:
 
-        in_file = os.path.basename(spec_path)
-        in_file_name = os.path.splitext(in_file)[0]
+        spec_path = (
+            SRC / "data_specs" / "data_specs" / survey_name / f"{file_name}.json"
+        )
 
         tmp = json.load(open(spec_path))
         tmp_instructions = {
@@ -49,6 +66,9 @@ for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
 for s in stata_instructions:
 
     @pytask.mark.task
+    @pytask.mark.skipif(
+        NO_RAW_FILES, reason="Skip extraction from and formatting of raw data files."
+    )
     @pytask.mark.stata(
         script=s["do"],
         options=[

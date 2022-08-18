@@ -18,7 +18,7 @@ local in_file_path `"`path_project'`path_data'`file_name'.zip"'
 local log_file `"`path_project'`path_log_inner'`file_name'.log"'
 local read_file `"`path_project'`path_do'"'
 local data_dict `"`path_project'`path_dict'"'
-local out_file `"`path_project'`path_out'`file_name'.csv"'
+local out_file `"`path_project'`path_out'`file_name'_raw.csv"'
 local path_out_full `"`path_project'`path_out'"'
 
 /* RUN SCRIPT */
