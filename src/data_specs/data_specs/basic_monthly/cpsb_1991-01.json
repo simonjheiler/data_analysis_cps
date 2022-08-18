@@ -1,0 +1,30 @@
+{
+  "in_dir": "cpsb_1991-01",
+  "in_file": "jan91pub",
+  "out_name": "cpsb_1991-01",
+  "read_file": "cpsb_1989-01.do",
+  "data_dict": "cpsb_1989-01.dct",
+  "var_dict": {
+    "year": "h_year",
+    "month": "h_month",
+    "month_in_sample": "h_mis",
+    "state": "hg_fips",
+    "sex": "a_sex",
+    "age": "a_age",
+    "education": "a_hga",
+    "grade_completed": "a_hgc",
+    "labor_force_status": "a_lfsr",
+    "race": "a_race",
+    "marital_status": "a_maritl",
+    "spouse_id": "a_spouse",
+    "earnings_weekly": "a_werntp",
+    "hourly_rate": "a_herntp",
+    "weight_long": "l_lngwgt",
+    "weight_personal": "a_fnlwgt"
+  },
+  "identifier": [
+    "h_id",
+    "h_hhnum",
+    "a_lineno"
+  ]
+}
