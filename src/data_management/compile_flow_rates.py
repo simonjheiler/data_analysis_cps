@@ -47,6 +47,14 @@ def _compile_flow_rates_one_year(year):
     df_out = pd.DataFrame()
 
     months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+    cols_out = [
+        "u_rate",
+        "u_rate_rel",
+        "eu_rate",
+        "eu_rate_rel",
+        "ue_rate",
+        "ue_rate_rel",
+    ]
     time_weights = np.full(len(months), np.nan)
 
     for idx, month in enumerate(months):
@@ -103,7 +111,7 @@ def _compile_flow_rates_one_year(year):
                     "match_identifier",
                     "month_in_sample",
                     "labor_force_status_reduced",
-                    "weight_long",
+                    "weight_personal",
                 ]
             ],
             left_index=False,
@@ -130,8 +138,8 @@ def _compile_flow_rates_one_year(year):
             subset=[
                 "labor_force_status_reduced_12m",
                 "labor_force_status_reduced",
-                "weight_long_12m",
-                "weight_long",
+                "weight_personal_12m",
+                "weight_personal",
             ],
             inplace=True,
         )
@@ -150,21 +158,23 @@ def _compile_flow_rates_one_year(year):
         merge_df.loc[:, "transition_eu"] = merge_df.employed_12m * merge_df.unemployed
         merge_df.loc[:, "transition_ue"] = merge_df.unemployed_12m * merge_df.employed
 
-        merge_df.loc[:, "employed_weighted"] = merge_df.employed * merge_df.weight_long
+        merge_df.loc[:, "employed_weighted"] = (
+            merge_df.employed * merge_df.weight_personal
+        )
         merge_df.loc[:, "unemployed_weighted"] = (
-            merge_df.unemployed * merge_df.weight_long
+            merge_df.unemployed * merge_df.weight_personal
         )
         merge_df.loc[:, "employed_12m_weighted"] = (
-            merge_df.employed_12m * merge_df.weight_long
+            merge_df.employed_12m * merge_df.weight_personal
         )
         merge_df.loc[:, "unemployed_12m_weighted"] = (
-            merge_df.unemployed_12m * merge_df.weight_long
+            merge_df.unemployed_12m * merge_df.weight_personal
         )
         merge_df.loc[:, "transition_eu_weighted"] = (
-            merge_df.transition_eu * merge_df.weight_long
+            merge_df.transition_eu * merge_df.weight_personal
         )
         merge_df.loc[:, "transition_ue_weighted"] = (
-            merge_df.transition_ue * merge_df.weight_long
+            merge_df.transition_ue * merge_df.weight_personal
         )
 
         # computed average rates
@@ -254,14 +264,16 @@ def _compile_flow_rates_one_year(year):
         df_tmp.loc[:, "ue_rate_rel"] = df_tmp.ue_rate / df_tmp.ue_rate_avg
 
         # drop unused columns
-        df_tmp = df_tmp[
-            ["u_rate", "u_rate_rel", "eu_rate", "eu_rate_rel", "ue_rate", "ue_rate_rel"]
-        ]
+        df_tmp = df_tmp[cols_out]
 
         df_out = pd.concat([df_out, df_tmp], axis=0)
 
-    # get averages
-    df_out = df_out.groupby(level=["age_group", "year"]).mean()
+    # get time averages weighted by total labor force
+    time_weights = time_weights / sum(time_weights)
+    df_out = df_out.groupby(["age_group", "year"]).apply(
+        lambda x: np.average(x, weights=time_weights, axis=0)
+    )
+    df_out = pd.DataFrame(df_out.to_list(), index=df_out.index, columns=cols_out)
 
     df_out.index = df_out.index.reorder_levels(order=["year", "age_group"])
 
@@ -317,9 +329,9 @@ if __name__ == "__main__":
         "1991",
         "1992",
         "1993",
-        "1994",
-        "1995",
-        "1996",
+        # "1994",
+        # "1995",
+        # "1996",
         "1997",
         "1998",
         "1999",
@@ -327,8 +339,8 @@ if __name__ == "__main__":
         "2001",
         "2002",
         "2003",
-        "2004",
-        "2005",
+        # "2004",
+        # "2005",
         "2006",
         "2007",
         "2008",

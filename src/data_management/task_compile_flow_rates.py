@@ -8,9 +8,9 @@ survey_years = [
     "1991",
     "1992",
     "1993",
-    "1994",
-    "1995",
-    "1996",
+    # "1994",
+    # "1995",
+    # "1996",
     "1997",
     "1998",
     "1999",
@@ -18,8 +18,8 @@ survey_years = [
     "2001",
     "2002",
     "2003",
-    "2004",
-    "2005",
+    # "2004",
+    # "2005",
     "2006",
     "2007",
     "2008",
@@ -65,6 +65,7 @@ deps = list(set(deps))
 deps = [BLD / "out" / "data" / "basic_monthly" / f"cpsb_{dep}.csv" for dep in deps]
 
 
+@pytask.mark.task
 @pytask.mark.depends_on(deps)
 @pytask.mark.produces([BLD / "out" / "datasets" / "cps_12m_flow_rates.csv"])
 def task_compile_flow_rates():
