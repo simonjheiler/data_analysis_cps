@@ -86,7 +86,7 @@ def _compile_flow_rates_df(year):
         df_to.loc[:, "age_group"] = df_to.age_group.cat.remove_unused_categories()
 
         df_from = df_from[df_from.month_in_sample.isin([1, 2, 3, 4])]
-        df_from = df_from.loc[(df_from.age >= 20) * (df_from.age <= 65), :]
+        df_from = df_from.loc[(df_from.age >= 20) * (df_from.age <= 64), :]
         df_from.loc[:, "age_group"] = df_from.age_group.cat.remove_unused_categories()
 
         # adjust month in sample for merging
