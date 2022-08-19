@@ -66,6 +66,34 @@ mis_codes_dict = {
 
 def _clean_one_dataset_monthly(df, specs):
 
+    # # run some checks
+    # df.loc[:, "status_unclear"] = (df.pemlr == "EMPLOYED-AT WORK") + (
+    #     df.pemlr == "EMPLOYED-ABSENT"
+    # )
+    # df.loc[:, "employed"] = (df.pemlr == "EMPLOYED-AT WORK") + (
+    #     df.pemlr == "EMPLOYED-ABSENT"
+    # )
+    # df.loc[:, "unemployed"] = (df.pemlr == "UNEMPLOYED-LOOKING") + (
+    #     df.pemlr == "UNEMPLOYED-ON LAYOFF"
+    # )
+    # df.loc[:, "not_in_labor_force"] = (
+    #     (df.pemlr == "NOT IN LABOR FORCE-RETIRED")
+    #     + (df.pemlr == "NOT IN LABOR FORCE-OTHER")
+    #     + (df.pemlr == "NOT IN LABOR FORCE-DISABLED")
+    # )
+    #
+    # df.loc[:, "not_in_labor_force_weighted"] = df.not_in_labor_force * df.pwsswgt
+    # df.loc[df.not_in_labor_force == False, "not_in_labor_force_weighted"] = 0
+    # df.not_in_labor_force_weighted = df.not_in_labor_force_weighted.astype(float)
+    #
+    # df.loc[:, "employed_weighted"] = df.employed * df.pwsswgt
+    # df.loc[df.employed == False, "employed_weighted"] = 0
+    # df.employed_weighted = df.employed_weighted.astype(float)
+    #
+    # df.loc[:, "unemployed_weighted"] = df.unemployed * df.pwsswgt
+    # df.loc[df.unemployed == False, "unemployed_weighted"] = 0
+    # df.unemployed_weighted = df.unemployed_weighted.astype(float)
+
     # define columns to be returned and data types
     cols_numeric = [var for var in specs["var_dict"] if "weight_" in var] + [
         "earnings_weekly"
@@ -130,6 +158,32 @@ def _clean_one_dataset_monthly(df, specs):
 
     for col in cols_categorical:
         df.loc[:, col] = df[col].astype("category")
+
+    # # run checks again
+    # df.loc[:, "status_unclear"] = df.labor_force_status_reduced.isna()
+    # df.loc[:, "employed"] = df.labor_force_status_reduced == "employed"
+    # df.loc[:, "unemployed"] = df.labor_force_status_reduced == "unemployed"
+    # df.loc[:, "not_in_labor_force"] = (
+    #     df.labor_force_status_reduced == "not in labor force"
+    # )
+    #
+    # df.loc[:, "status_unclear_weighted"] = df.status_unclear * df.weight_personal
+    # df.loc[df.status_unclear == False, "status_unclear_weighted"] = 0
+    # df.status_unclear_weighted = df.status_unclear_weighted.astype(float)
+    #
+    # df.loc[:, "not_in_labor_force_weighted"] = (
+    #     df.not_in_labor_force * df.weight_personal
+    # )
+    # df.loc[df.not_in_labor_force == False, "not_in_labor_force_weighted"] = 0
+    # df.not_in_labor_force_weighted = df.not_in_labor_force_weighted.astype(float)
+    #
+    # df.loc[:, "employed_weighted"] = df.employed * df.weight_personal
+    # df.loc[df.employed == False, "employed_weighted"] = 0
+    # df.employed_weighted = df.employed_weighted.astype(float)
+    #
+    # df.loc[:, "unemployed_weighted"] = df.unemployed * df.weight_personal
+    # df.loc[df.unemployed == False, "unemployed_weighted"] = 0
+    # df.unemployed_weighted = df.unemployed_weighted.astype(float)
 
     # drop unused columns
     df = df[cols_out]
