@@ -39,7 +39,10 @@ data_types_cps_monthly = {
 #####################################################
 
 
-def _compile_flow_rates_df(year):
+def _compile_flow_rates_one_year(year):
+
+    age_min = 20
+    age_max = 64
 
     df_out = pd.DataFrame()
 
@@ -82,11 +85,11 @@ def _compile_flow_rates_df(year):
 
         # select entries for which 12m transitions are observable
         df_to = df_to.loc[df_to.month_in_sample.isin([5, 6, 7, 8]), :]
-        df_to = df_to.loc[(df_to.age >= 20) * (df_to.age <= 65), :]
+        df_to = df_to.loc[(df_to.age >= age_min) * (df_to.age <= age_max), :]
         df_to.loc[:, "age_group"] = df_to.age_group.cat.remove_unused_categories()
 
         df_from = df_from[df_from.month_in_sample.isin([1, 2, 3, 4])]
-        df_from = df_from.loc[(df_from.age >= 20) * (df_from.age <= 64), :]
+        df_from = df_from.loc[(df_from.age >= age_min) * (df_from.age <= age_max), :]
         df_from.loc[:, "age_group"] = df_from.age_group.cat.remove_unused_categories()
 
         # adjust month in sample for merging
@@ -293,6 +296,16 @@ def _get_transitions(var_from, var_to, weights):
     return trans, dist_init, dist_final
 
 
+def _compile_flow_rates_df(years):
+
+    df_out = pd.DataFrame()
+    for year in years:
+        df_tmp = _compile_flow_rates_one_year(year)
+        df_out = pd.concat([df_out, df_tmp], axis=0)
+
+    return df_out
+
+
 #####################################################
 # SCRIPT
 #####################################################
@@ -332,9 +345,6 @@ if __name__ == "__main__":
         "2019",
     ]
 
-    df_out = pd.DataFrame()
-    for year in years:
-        df_tmp = _compile_flow_rates_df(year)
-        df_out = pd.concat([df_out, df_tmp], axis=0)
+    df_out = _compile_flow_rates_df(years)
 
     df_out.to_csv(BLD / "out" / "datasets" / "cps_12m_flow_rates.csv", index=True)
