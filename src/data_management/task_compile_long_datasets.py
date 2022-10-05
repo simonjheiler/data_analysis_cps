@@ -3,6 +3,7 @@ import os
 import pytask
 
 from src.config import BLD
+from src.config import DAT
 from src.data_management.compile_dataset import _compile_long_df
 
 
@@ -14,7 +15,7 @@ surveys = ["supplement_asec", "supplement_tenure"]
     [
         (
             [
-                BLD / "out" / "data" / survey / x
+                DAT / "cps" / survey / x
                 for x in os.listdir(BLD / "out" / "data" / survey)
                 if os.path.isfile(BLD / "out" / "data" / survey / x)
             ],

@@ -4,13 +4,13 @@ from datetime import datetime
 import pandas as pd
 import pytask
 
-from src.config import BLD
+from src.config import DAT
 from src.config import SRC
 from src.data_management.format_one_dataset_basic_monthly import (
     _clean_one_dataset_monthly,
 )
 
-NO_RAW_FILES = True
+NO_RAW_FILES = False
 
 data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
 
@@ -33,8 +33,8 @@ for survey_name in ["basic_monthly"]:
         "depends_on, produces, spec_path",
         [
             (
-                BLD / "out" / "data" / survey_name / "raw" / f"{file_name}_raw.csv",
-                BLD / "out" / "data" / survey_name / f"{file_name}.csv",
+                DAT / "cps" / survey_name / "temp" / f"{file_name}_raw.csv",
+                DAT / "cps" / survey_name / "formatted" / f"{file_name}.csv",
                 SRC / "data_specs" / "data_specs" / survey_name / f"{file_name}.json",
             )
             for file_name in file_names

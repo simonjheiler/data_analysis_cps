@@ -1,6 +1,6 @@
 import pytask
 
-from src.config import BLD
+from src.config import DAT
 from src.data_management.compile_flow_rates import _compile_flow_rates_df
 
 survey_years = [
@@ -62,13 +62,17 @@ for year in survey_years:
 
 # remove duplicates and transform to paths
 deps = list(set(deps))
-deps = [BLD / "out" / "data" / "basic_monthly" / f"cpsb_{dep}.csv" for dep in deps]
+deps = [DAT / "cps" / "basic_monthly" / "formatted" / f"cpsb_{dep}.csv" for dep in deps]
 
 
 @pytask.mark.task
 @pytask.mark.depends_on(deps)
-@pytask.mark.produces([BLD / "out" / "datasets" / "cps_12m_flow_rates.csv"])
+@pytask.mark.produces(
+    [DAT / "cps" / "basic_monthly" / "results" / "cps_12m_flow_rates.csv"]
+)
 def task_compile_flow_rates():
 
     df_out = _compile_flow_rates_df(survey_years)
-    df_out.to_csv(BLD / "out" / "datasets" / "cps_12m_flow_rates.csv", index=True)
+    df_out.to_csv(
+        DAT / "cps" / "basic_monthly" / "results" / "cps_12m_flow_rates.csv", index=True
+    )

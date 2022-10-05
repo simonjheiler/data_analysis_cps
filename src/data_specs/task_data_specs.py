@@ -9,6 +9,7 @@ from datetime import datetime
 
 import pytask
 
+from src.config import DAT
 from src.config import SRC
 from src.data_specs._get_data_specs import _write_data_specs_cps
 
@@ -16,7 +17,7 @@ cps_data_instructions = json.load(
     open(SRC / "data_specs" / "cps_data_instructions.json")
 )
 
-surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
+surveys = ["basic_monthly"]
 
 prefixes = {}
 datasets = {}
@@ -30,7 +31,7 @@ for survey in surveys:
 
     # filter selected files from list of all files
     datasets_all = [
-        f for f in os.listdir(SRC / "original_data" / survey) if f.endswith(".zip")
+        f for f in os.listdir(DAT / "cps" / survey / "rawdata") if f.endswith(".zip")
     ]
     datasets_all = [re.sub(r"cps\w_", "", f) for f in datasets_all]
     datasets_all = [re.sub(".zip", "", f) for f in datasets_all]

@@ -9,16 +9,17 @@ local path_log_inner `4'
 local path_data `5'
 local path_do `6'
 local path_dict `7'
-local path_out `8'
-local variables `9'
+local path_in `8'
+local path_out `9'
+local variables `10'
 local variables = subinstr("`variables'", "-", " ",.)
 
 * construct derived variables
-local in_file_path `"`path_project'`path_data'`file_name'.zip"'
-local log_file `"`path_project'`path_log_inner'`file_name'.log"'
+local in_file_path `"`path_data'`path_in'`file_name'.zip"'
+local log_file `"`path_data'`path_log_inner'`file_name'.log"'
 local read_file `"`path_project'`path_do'"'
 local data_dict `"`path_project'`path_dict'"'
-local out_file `"`path_project'`path_out'`file_name'_raw.csv"'
+local out_file `"`path_data'`path_out'`file_name'_raw.csv"'
 local path_out_full `"`path_project'`path_out'"'
 
 /* RUN SCRIPT */

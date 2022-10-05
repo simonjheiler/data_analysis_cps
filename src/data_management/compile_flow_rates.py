@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import BLD
+from src.config import DAT
 from src.config import SRC
 
 
@@ -67,12 +68,12 @@ def _compile_flow_rates_one_year(year):
 
         # read in and merge data
         df_from = pd.read_csv(
-            BLD / "out" / "data" / "basic_monthly" / filename_from,
+            DAT / "cps" / "basic_monthly" / "formatted" / filename_from,
             dtype=data_types_cps_monthly,
         )
 
         df_to = pd.read_csv(
-            BLD / "out" / "data" / "basic_monthly" / filename_to,
+            DAT / "cps" / "basic_monthly" / "formatted" / filename_to,
             dtype=data_types_cps_monthly,
         )
 
@@ -359,4 +360,4 @@ if __name__ == "__main__":
 
     df_out = _compile_flow_rates_df(years)
 
-    df_out.to_csv(BLD / "out" / "datasets" / "cps_12m_flow_rates.csv", index=True)
+    df_out.to_csv(BLD / "results" / "cps_12m_flow_rates.csv", index=True)

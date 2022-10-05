@@ -5,10 +5,11 @@ from datetime import datetime
 import pandas as pd
 import pytask
 
+from src.config import DAT
 from src.config import ROOT
 from src.config import SRC
 
-NO_RAW_FILES = True
+NO_RAW_FILES = False
 
 data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
 
@@ -42,22 +43,23 @@ for survey_name in ["basic_monthly"]:
             "do": SRC / "data_management" / "extract_data.do",
             "deps": [
                 spec_path,
-                SRC / "original_data" / survey_name / f"{tmp['in_dir']}.zip",
+                DAT / "cps" / survey_name / "rawdata" / f"{tmp['in_dir']}.zip",
                 SRC / "data_management" / survey_name / tmp["read_file"],
                 SRC / "data_specs" / "data_dicts" / survey_name / tmp["data_dict"],
             ],
             "in_dir": tmp["in_dir"],
             "in_file": tmp["in_file"],
-            "path_project": str(ROOT) + "/",
-            "path_log": "/".join(["bld", "out", "data", survey_name, "log"]) + "/",
-            "path_data": "/".join(["src", "original_data", survey_name]) + "/",
+            "path_project": str(ROOT).replace("\\", "/") + "/",
+            "path_data": str(DAT).replace("\\", "/") + "/",
             "path_do": "/".join(
                 ["src", "data_management", survey_name, tmp["read_file"]]
             ),
             "path_dict": "/".join(
                 ["src", "data_specs", "data_dicts", survey_name, tmp["data_dict"]]
             ),
-            "path_out": "/".join(["bld", "out", "data", survey_name, "raw"]) + "/",
+            "path_in": "/".join(["cps", survey_name, "rawdata"]) + "/",
+            "path_log": "/".join(["cps", survey_name, "formatted", "log"]) + "/",
+            "path_out": "/".join(["cps", survey_name, "temp"]) + "/",
             "variables": "-".join(list(tmp["var_dict"].values()) + tmp["identifier"]),
         }
         stata_instructions.append(tmp_instructions)
@@ -81,6 +83,7 @@ for s in stata_instructions:
                 s["path_data"],
                 s["path_do"],
                 s["path_dict"],
+                s["path_in"],
                 s["path_out"],
                 s["variables"],
             ]
@@ -89,8 +92,8 @@ for s in stata_instructions:
     @pytask.mark.depends_on([s["do"], *s["deps"]])
     @pytask.mark.produces(
         [
-            ROOT / s["path_log"] / f"{s['in_dir']}.log",
-            ROOT / s["path_out"] / f"{s['in_dir']}_raw.csv",
+            DAT / s["path_log"] / f"{s['in_dir']}.log",
+            DAT / s["path_out"] / f"{s['in_dir']}_raw.csv",
         ]
     )
     def task_extract_data():
