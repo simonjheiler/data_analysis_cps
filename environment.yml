@@ -16,6 +16,7 @@ dependencies:
   - pytask-latex>=0.2.0
   - pytask-r>=0.2.0
   - pytask-stata>=0.2.0
+  - pytask-parallel>=0.2.0
 
   - pytest
   - pytest-cov

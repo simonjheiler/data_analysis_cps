@@ -14,16 +14,22 @@ NO_RAW_FILES = False
 data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
 
 stata_instructions = []
-for survey_name in ["basic_monthly"]:
+for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
 
     date_start = datetime.strptime(
-        data_instructions[survey_name]["date_start"], "%Y-%m"
+        data_instructions[survey_name]["date_start"],
+        data_instructions[survey_name]["date_format"],
     )
-    date_end = datetime.strptime(data_instructions[survey_name]["date_end"], "%Y-%m")
+    date_end = datetime.strptime(
+        data_instructions[survey_name]["date_end"],
+        data_instructions[survey_name]["date_format"],
+    )
     frequency = data_instructions[survey_name]["frequency"]
     prefix = data_instructions[survey_name]["prefix"]
 
-    file_names = pd.date_range(date_start, date_end, freq=frequency).strftime("%Y-%m")
+    file_names = pd.date_range(date_start, date_end, freq=frequency).strftime(
+        data_instructions[survey_name]["date_format"]
+    )
     file_names = [f"{prefix}_{file}" for file in file_names]
 
     # load data specs and file names

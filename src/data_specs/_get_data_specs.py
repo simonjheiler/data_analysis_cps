@@ -42,15 +42,18 @@ def _filter_vardict_cps(vardict, varlist):
 
 def _write_data_specs_cps(instructions, description):
 
+    # load instructions
     date_start = instructions["date_start"]
     date_end = instructions["date_end"]
+    date_format = instructions["date_format"]
     var_list = instructions["variables"]
     prefix = instructions["prefix"]
     frequency = instructions["frequency"]
 
-    surveys_selected = (
-        pd.date_range(start=date_start, end=date_end, freq=frequency)
-        .strftime("%Y-%m")
+    # generate file list
+    specs_out = pd.DataFrame(
+        index=pd.date_range(start=date_start, end=date_end, freq=frequency)
+        .strftime(date_format)
         .tolist()
     )
 
@@ -60,10 +63,9 @@ def _write_data_specs_cps(instructions, description):
         _filter_vardict_cps, args=[var_list]
     )
 
-    specs_out = pd.DataFrame(index=surveys_selected)
-    specs_out["in_dir"] = prefix + "_" + specs_out.index
+    specs_out.loc[:, "in_dir"] = prefix + "_" + specs_out.index.values
     if prefix == "cpsb":
-        specs_out["in_file"] = (
+        specs_out.loc[:, "in_file"] = (
             pd.to_datetime(specs_out.index).strftime("%b%y").str.lower() + "pub"
         )
     else:
@@ -72,7 +74,7 @@ def _write_data_specs_cps(instructions, description):
     specs_out["period"] = pd.to_datetime(specs_out.index)
 
     specs_out = pd.merge_asof(specs_out, data_desc, on="period")
-    specs_out.index = specs_out["period"].dt.strftime("%Y-%m")
+    specs_out.index = specs_out["period"].dt.strftime(date_format)
     specs_out = specs_out.drop(columns="period")
     specs_out = specs_out.to_dict("index")
 

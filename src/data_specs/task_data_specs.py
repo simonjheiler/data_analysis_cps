@@ -3,13 +3,11 @@
 
 """
 import json
-import os
-import re
 from datetime import datetime
 
+import pandas as pd
 import pytask
 
-from src.config import DAT
 from src.config import SRC
 from src.data_specs._get_data_specs import _write_data_specs_cps
 
@@ -17,37 +15,43 @@ cps_data_instructions = json.load(
     open(SRC / "data_specs" / "cps_data_instructions.json")
 )
 
-surveys = ["basic_monthly"]
+surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
+
+RERUN_DATA_SPECS = True
 
 prefixes = {}
-datasets = {}
+file_lists = {}
 for survey in surveys:
 
     # load info from data instructions
-    date_start = datetime.strptime(cps_data_instructions[survey]["date_start"], "%Y-%m")
-    date_end = datetime.strptime(cps_data_instructions[survey]["date_end"], "%Y-%m")
+    date_start = datetime.strptime(
+        cps_data_instructions[survey]["date_start"],
+        cps_data_instructions[survey]["date_format"],
+    )
+    date_end = datetime.strptime(
+        cps_data_instructions[survey]["date_end"],
+        cps_data_instructions[survey]["date_format"],
+    )
     var_list = cps_data_instructions[survey]["variables"]
     prefixes[survey] = cps_data_instructions[survey]["prefix"]
 
-    # filter selected files from list of all files
-    datasets_all = [
-        f for f in os.listdir(DAT / "cps" / survey / "rawdata") if f.endswith(".zip")
-    ]
-    datasets_all = [re.sub(r"cps\w_", "", f) for f in datasets_all]
-    datasets_all = [re.sub(".zip", "", f) for f in datasets_all]
-    datasets_all = [datetime.strptime(f, "%Y-%m") for f in datasets_all]
-
-    datasets_selected = []
-    for dataset in datasets_all:
-        if dataset >= date_start and dataset <= date_end:
-            datasets_selected.append(dataset)
+    file_list = (
+        pd.date_range(
+            start=date_start,
+            end=date_end,
+            freq=cps_data_instructions[survey]["frequency"],
+        )
+        .strftime(cps_data_instructions[survey]["date_format"])
+        .tolist()
+    )
 
     # store list of selected files in dict
-    datasets[survey] = [
-        datetime.strftime(dataset, "%Y-%m") for dataset in datasets_selected
-    ]
+    file_lists[survey] = file_list
 
 
+@pytask.mark.skipif(
+    RERUN_DATA_SPECS, reason="Skip creation of specifications for data extraction."
+)
 @pytask.mark.parametrize(
     "depends_on, produces, survey_name",
     [
@@ -59,12 +63,12 @@ for survey in surveys:
                 / f"cps_data_description_{survey}.json",
             },
             {
-                dataset: SRC
+                file: SRC
                 / "data_specs"
                 / "data_specs"
                 / survey
-                / f"{prefixes[survey]}_{dataset}.json"
-                for dataset in datasets[survey]
+                / f"{cps_data_instructions[survey]['prefix']}_{file}.json"
+                for file in file_lists[survey]
             },
             survey,
         )
