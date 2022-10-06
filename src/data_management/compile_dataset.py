@@ -1,11 +1,13 @@
 import json
 import os
 import re
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 
 from src.config import BLD
+from src.config import DAT
 from src.config import SRC
 from src.data_management.format_one_dataset_supplement_asec import (
     _clean_one_dataset_yearly,
@@ -19,7 +21,7 @@ from src.data_management.format_one_dataset_supplement_tenure import format_one_
 idx = pd.IndexSlice
 
 cpi_deflator = pd.read_csv(
-    SRC / "original_data" / "misc" / "cpi_to_1999_conversion.csv",
+    DAT / "misc" / "cpi_to_1999_conversion.csv",
     names=["to_1999"],
     header=0,
 )
@@ -246,13 +248,23 @@ if __name__ == "__main__":
 
     survey_name = "supplement_asec"
 
-    infiles = os.listdir(BLD / "out" / "data" / survey_name)
+    date_start = datetime.strptime(
+        data_instructions[survey_name]["date_start"],
+        data_instructions[survey_name]["date_format"],
+    )
+    date_end = datetime.strptime(
+        data_instructions[survey_name]["date_end"],
+        data_instructions[survey_name]["date_format"],
+    )
+    frequency = data_instructions[survey_name]["frequency"]
+    prefix = data_instructions[survey_name]["prefix"]
 
-    data = [
-        BLD / "out" / "data" / survey_name / x
-        for x in infiles
-        if os.path.isfile(BLD / "out" / "data" / survey_name / x)
-    ]
-    prod = BLD / "out" / "data" / f"cps_{survey_name}_extract.csv"
+    file_names = pd.date_range(date_start, date_end, freq=frequency).strftime(
+        data_instructions[survey_name]["date_format"]
+    )
+    file_names = [f"{prefix}_{file}.csv" for file in file_names]
 
-    _compile_long_df(data, prod, survey_name)
+    deps = [BLD / "out" / "data" / survey_name / x for x in file_names]
+    prod = BLD / "datasets" / f"cps_{survey_name}_extract.csv"
+
+    _compile_long_df(deps, prod, survey_name)

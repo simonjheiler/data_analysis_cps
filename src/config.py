@@ -9,7 +9,7 @@ BLD = ROOT / "bld"
 if username == "user":
     DAT = Path.home() / "data"  # replace with correct data directory
 elif username == "simon":
-    DAT = Path.home() / "local_uni" / "data"
+    DAT = Path.home() / "Documents" / "local_uni" / "data"
     # DAT = Path("H:/simon/data")
 else:
     raise ValueError(
