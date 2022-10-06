@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import BLD
+from src.config import DAT
 from src.config import SRC
 from src.utilities.format_utils import _add_categorical_variables
 
@@ -14,13 +15,13 @@ from src.utilities.format_utils import _add_categorical_variables
 #####################################################
 
 # CPS state codes
-state_codes = pd.read_csv(SRC / "original_data" / "misc" / "cps_us_state_codes.csv")
+state_codes = pd.read_csv(DAT / "cps" / "misc" / "cps_us_state_codes.csv")
 state_codes_dict = {
     state_codes.iloc[i, 0]: state_codes.iloc[i, 1] for i in range(state_codes.shape[0])
 }
 
 cpi_deflator = pd.read_csv(
-    SRC / "original_data" / "misc" / "cpi_to_1999_conversion.csv",
+    DAT / "misc" / "cpi_to_1999_conversion.csv",
     names=["to_1999"],
     header=0,
 )
