@@ -2,7 +2,6 @@ import json
 from datetime import datetime
 
 import pandas as pd
-
 import pytask
 
 from src.config import BLD
