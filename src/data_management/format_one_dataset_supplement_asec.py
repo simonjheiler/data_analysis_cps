@@ -200,7 +200,7 @@ if __name__ == "__main__":
     try:
         dataset = sys.argv[1]
     except IndexError:
-        dataset = "cpsy_1989"
+        dataset = "cpsa_1989-03"
 
     try:
         name_in = dataset + "_raw.csv"

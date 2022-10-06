@@ -172,6 +172,7 @@ def _compile_long_df_supplement_asec(in_data, out_path):
         # get data specs
         filename = os.path.basename(dataset)
         specs_name = re.sub(".csv", ".json", filename)
+        specs_name = re.sub("_raw", "", specs_name)
         specs = json.load(
             open(SRC / "data_specs" / "data_specs" / survey_name / specs_name)
         )
@@ -262,9 +263,9 @@ if __name__ == "__main__":
     file_names = pd.date_range(date_start, date_end, freq=frequency).strftime(
         data_instructions[survey_name]["date_format"]
     )
-    file_names = [f"{prefix}_{file}.csv" for file in file_names]
+    file_names = [f"{prefix}_{file}_raw.csv" for file in file_names]
 
-    deps = [BLD / "out" / "data" / survey_name / x for x in file_names]
+    deps = [DAT / "cps" / survey_name / "temp" / x for x in file_names]
     prod = BLD / "datasets" / f"cps_{survey_name}_extract.csv"
 
     _compile_long_df(deps, prod, survey_name)
