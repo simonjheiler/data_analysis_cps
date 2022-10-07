@@ -4,7 +4,6 @@ from datetime import datetime
 import pandas as pd
 import pytask
 
-from src.config import BLD
 from src.config import DAT
 from src.config import SRC
 from src.data_management.compile_dataset import _compile_long_df
@@ -13,6 +12,7 @@ data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.j
 
 surveys = ["supplement_asec", "supplement_tenure"]
 
+task_instructions = {}
 for survey_name in surveys:
 
     date_start = datetime.strptime(
@@ -32,18 +32,10 @@ for survey_name in surveys:
     file_names = [f"{prefix}_{file}_raw.csv" for file in file_names]
 
     deps = [DAT / "cps" / survey_name / "temp" / x for x in file_names]
-    prod = BLD / "datasets" / f"cps_{survey_name}_extract.csv"
+    prod = DAT / "cps" / survey_name / "results" / f"cps_{survey_name}_extract.csv"
 
-    @pytask.mark.task
-    @pytask.mark.parametrize(
-        "depends_on, produces, survey_name",
-        [
-            (
-                deps,
-                prod,
-                survey_name,
-            )
-        ],
-    )
-    def task_compile_data(depends_on, produces, survey_name):
-        _compile_long_df(depends_on, produces, survey_name)
+    @pytask.mark.task(kwargs={"survey": survey_name})
+    @pytask.mark.depends_on(deps)
+    @pytask.mark.produces(prod)
+    def task_compile_data(depends_on, produces, survey):
+        _compile_long_df(depends_on, produces, survey)
