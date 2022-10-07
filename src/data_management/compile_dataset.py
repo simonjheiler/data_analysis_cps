@@ -6,7 +6,6 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from src.config import BLD
 from src.config import DAT
 from src.config import SRC
 from src.data_management.format_one_dataset_supplement_asec import (
@@ -95,11 +94,15 @@ def _compile_long_df_supplement_tenure(in_data, out_path):
     # initiate object to store data and iterable
     df = pd.DataFrame(columns=cols_analysis)
 
+    if type(in_data) is dict:
+        in_data = [*in_data.values()]
+
     for dataset in in_data:
 
         # get data specs
         filename = os.path.basename(dataset)
         specs_name = re.sub(".csv", ".json", filename)
+        specs_name = re.sub("_raw", "", specs_name)
         specs = json.load(
             open(SRC / "data_specs" / "data_specs" / survey_name / specs_name)
         )
@@ -138,7 +141,7 @@ def _compile_long_df_supplement_tenure(in_data, out_path):
                 tmp_df.loc[:, col] = np.nan
 
         # append current data to output df
-        df = df.append(tmp_df[cols_analysis])
+        df = pd.concat([df, tmp_df[cols_analysis]], axis=0)
 
     df.to_csv(out_path)
 
@@ -166,6 +169,9 @@ def _compile_long_df_supplement_asec(in_data, out_path):
     cols_payments = ["earnings_weekly"]
 
     df = pd.DataFrame(columns=cols_out)
+
+    if type(in_data) is dict:
+        in_data = [*in_data.values()]
 
     for dataset in in_data:
 
@@ -197,7 +203,7 @@ def _compile_long_df_supplement_asec(in_data, out_path):
         tmp_df = _deflate_payments(tmp_df, cols_payments, 2002)
 
         # store data
-        df = df.append(tmp_df[cols_out])
+        df = pd.concat([df, tmp_df[cols_out]], axis=0)
 
     df.to_csv(out_path)
 
@@ -266,6 +272,6 @@ if __name__ == "__main__":
     file_names = [f"{prefix}_{file}_raw.csv" for file in file_names]
 
     deps = [DAT / "cps" / survey_name / "temp" / x for x in file_names]
-    prod = BLD / "datasets" / f"cps_{survey_name}_extract.csv"
+    prod = DAT / "cps" / survey_name / "results" / f"cps_{survey_name}_extract.csv"
 
     _compile_long_df(deps, prod, survey_name)
