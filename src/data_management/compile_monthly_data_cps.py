@@ -7,7 +7,6 @@ from src.config import BLD
 from src.config import DAT
 from src.config import SRC
 
-
 #####################################################
 # PARAMETERS
 #####################################################
@@ -83,7 +82,7 @@ data_types_cps_monthly = {
 #####################################################
 
 
-def _compile_long_monthly_df():
+def _compile_long_monthly_df(in_data, out_path):
 
     date_start = data_instructions["basic_monthly"]["date_start"]
     date_end = data_instructions["basic_monthly"]["date_end"]
@@ -148,34 +147,22 @@ def _compile_long_monthly_df():
     # initiate object to store data and iterable
     analysis_df = pd.DataFrame(columns=cols_analysis)
     periods_iter = periods[:-3]
-    periods_plus_1m = periods[1:-2]
-    periods_plus_3m = periods[3:]
 
-    for index, period in enumerate(periods_iter):
+    for index, _ in enumerate(periods_iter):
 
         # read in data
-        filename = "cpsb_" + period + ".csv"
-        tmp_df = pd.read_csv(
-            DAT / "cps" / "basic_monthly" / filename,
-            dtype=data_types_cps_monthly,
-        )
+        in_file = in_data[index]
+        tmp_df = pd.read_csv(in_file, dtype=data_types_cps_monthly)
 
         if get_transitions:
 
             # read in data for month t+1
-            filename_next = "cpsb_" + periods_plus_1m[index] + ".csv"
-            next_df = pd.read_csv(
-                DAT / "cps" / "basic_monthly" / "formatted" / filename_next,
-                dtype=data_types_cps_monthly,
-            )
+            next_df = pd.read_csv(in_data[index + 1], dtype=data_types_cps_monthly)
+
             tmp_df = _join_transitions(tmp_df, next_df, 1)
 
             # read in data for month t+3
-            filename_next = "cpsb_" + periods_plus_3m[index] + ".csv"
-            next_df = pd.read_csv(
-                DAT / "cps" / "basic_monthly" / "formatted" / filename_next,
-                dtype=data_types_cps_monthly,
-            )
+            next_df = pd.read_csv(in_data[index + 3], dtype=data_types_cps_monthly)
             tmp_df = _join_transitions(tmp_df, next_df, 3)
 
         # drop observations with missing values in required field
@@ -215,7 +202,7 @@ def _compile_long_monthly_df():
                 tmp_df.loc[:, col] = np.nan
 
         # append current data to output df
-        analysis_df = analysis_df.append(tmp_df[cols_analysis])
+        analysis_df = pd.concat([analysis_df, tmp_df[cols_analysis]], axis=0)
 
     return analysis_df
 

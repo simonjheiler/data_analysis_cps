@@ -10,7 +10,7 @@ from src.data_management.compile_dataset import _compile_long_df
 
 data_instructions = json.load(open(SRC / "data_specs" / "cps_data_instructions.json"))
 
-surveys = ["supplement_asec", "supplement_tenure"]
+surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
 
 task_instructions = {}
 for survey_name in surveys:
@@ -29,9 +29,9 @@ for survey_name in surveys:
     file_names = pd.date_range(date_start, date_end, freq=frequency).strftime(
         data_instructions[survey_name]["date_format"]
     )
-    file_names = [f"{prefix}_{file}_raw.csv" for file in file_names]
+    file_names = [f"{prefix}_{file}.csv" for file in file_names]
 
-    deps = [DAT / "cps" / survey_name / "temp" / x for x in file_names]
+    deps = [DAT / "cps" / survey_name / "formatted" / x for x in file_names]
     prod = DAT / "cps" / survey_name / "results" / f"cps_{survey_name}_extract.csv"
 
     @pytask.mark.task(kwargs={"survey": survey_name})

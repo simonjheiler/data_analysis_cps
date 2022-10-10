@@ -1,11 +1,9 @@
-import datetime
 import json
 import sys
 
 import numpy as np
 import pandas as pd
 
-from src.config import BLD
 from src.config import DAT
 from src.config import SRC
 from src.utilities.format_utils import _add_categorical_variables
@@ -129,6 +127,15 @@ def format_one_dataset(df, specs):
     # drop unused columns
     df = df[cols_out]
 
+    # change column labels in accordance with output df
+    df = df.rename(
+        columns={
+            "labor_force_status_reduced": "labor_force_status",
+            "education_reduced": "education",
+            "race_reduced": "race",
+            "marital_status_reduced": "marital_status",
+        }
+    )
     return df
 
 
@@ -228,48 +235,17 @@ if __name__ == "__main__":
     try:
         dataset = sys.argv[1]
     except IndexError:
-        dataset = "cpst_1989-01"
+        dataset = "cpst_2002-01"
 
-    try:
-        name_in = dataset + "_raw.csv"
-        name_out = dataset + ".csv"
-        df_in = pd.read_csv(BLD / "out" / "data" / name_in, dtype=str)
-        data_specs = json.load(
-            open(
-                SRC / "data_specs" / "specs" / "cps",
-                "specs",
-                "monthly",
-                dataset + ".json",
-            )
+    name_in = dataset + "_raw.csv"
+    name_out = dataset + ".csv"
+    df_in = pd.read_csv(DAT / "cps" / "supplement_tenure" / "temp" / name_in, dtype=str)
+    data_specs = json.load(
+        open(
+            SRC / "data_specs" / "data_specs" / "supplement_tenure" / f"{dataset}.json"
         )
-        df_out = format_one_dataset(df_in, data_specs)
-        df_out.to_csv(BLD / "out" / "data" / name_out, index=True)
-        log = dataset + ": " + str(datetime.datetime.now()) + " - OK! \n"
-    except FileNotFoundError:
-        log = (
-            dataset
-            + ": "
-            + str(datetime.datetime.now())
-            + " - Error! File not Found. \n"
-        )
-
-    try:
-        logfile = open(BLD / "out" / "data" / "format_data_cps_monthly_log.txt")
-        entries = logfile.readlines()
-    except FileNotFoundError:
-        entries = []
-
-    in_log = False
-    for idx, line in enumerate(entries):
-        if dataset in line:
-            entries[idx] = log
-            in_log = True
-
-    if not in_log:
-        entries.append(log)
-
-    entries = [entry for entry in entries if entry != " \n"]
-
-    logfile = open(BLD / "out" / "data" / "format_data_cps_monthly_log.txt", "w")
-    for line in entries:
-        logfile.write(f"{line}")
+    )
+    df_out = format_one_dataset(df_in, data_specs)
+    df_out.to_csv(
+        DAT / "cps" / "supplement_tenure" / "formatted" / name_out, index=True
+    )

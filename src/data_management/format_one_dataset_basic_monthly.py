@@ -120,9 +120,12 @@ def _clean_one_dataset_monthly(df, specs):
     cols_match = specs["identifier"]
 
     # create longitudinal match identifier
-    df.loc[:, "match_identifier"] = df.loc[:, cols_match[0]].astype(str)
+    for col in cols_match:
+        df[col] = df[col].astype(str)
+
+    df.loc[:, "match_identifier"] = df.loc[:, cols_match[0]]
     for col in cols_match[1:]:
-        df.loc[:, "match_identifier"] += df.loc[:, col].astype(str)
+        df.loc[:, "match_identifier"] += df.loc[:, col]
 
     # set identifier as index
     df.set_index("match_identifier", inplace=True)

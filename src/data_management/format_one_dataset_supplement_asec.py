@@ -1,4 +1,3 @@
-import datetime
 import json
 import sys
 
@@ -121,6 +120,16 @@ def _clean_one_dataset_yearly(df, specs):
     # read in columns used to construct match identifier
     cols_match = specs["identifier"]
 
+    # clean year variable
+    if specs["in_dir"][5:8] == "198":
+        df.loc[:, specs["var_dict"]["year"]] = (
+            "198" + df.loc[:, specs["var_dict"]["year"]]
+        )
+    elif specs["in_dir"][5:8] == "199" and specs["in_dir"][5:9] != "1999":
+        df.loc[:, specs["var_dict"]["year"]] = (
+            "199" + df.loc[:, specs["var_dict"]["year"]]
+        )
+
     # create longitudinal match identifier
     df.loc[:, "match_identifier"] = df.loc[:, cols_match[0]].astype(str)
     for col in cols_match[1:]:
@@ -202,45 +211,11 @@ if __name__ == "__main__":
     except IndexError:
         dataset = "cpsa_1989-03"
 
-    try:
-        name_in = dataset + "_raw.csv"
-        name_out = dataset + ".csv"
-        df_in = pd.read_csv(
-            BLD / "out" / "data" / "supplement_asec" / name_in, dtype=str
-        )
-        data_specs = json.load(
-            open(SRC / "data_specs" / "supplement_asec" / f"{dataset}.json")
-        )
-        df_out = _clean_one_dataset_yearly(df_in, data_specs)
-        df_out.to_csv(BLD / "out" / "data" / "supplement_asec" / name_out, index=False)
-        log = dataset + ": " + str(datetime.datetime.now()) + " - OK! \n"
-    except FileNotFoundError:
-        log = (
-            dataset
-            + ": "
-            + str(datetime.datetime.now())
-            + " - Error! File not Found. \n"
-        )
-
-    try:
-        logfile = open(
-            BLD / "out" / "data" / "supplement_asec" / "format_data_cps_yearly_log.txt"
-        )
-        entries = logfile.readlines()
-    except FileNotFoundError:
-        entries = []
-
-    in_log = False
-    for idx, line in enumerate(entries):
-        if dataset in line:
-            entries[idx] = log
-            in_log = True
-
-    if not in_log:
-        entries.append(log)
-
-    entries = [entry for entry in entries if entry != " \n"]
-
-    logfile = open(BLD / "out" / "data" / "format_data_cps_yearly_log.txt", "w")
-    for line in entries:
-        logfile.write(f"{line}")
+    name_in = dataset + "_raw.csv"
+    name_out = dataset + ".csv"
+    df_in = pd.read_csv(DAT / "cps" / "supplement_asec" / "temp" / name_in, dtype=str)
+    data_specs = json.load(
+        open(SRC / "data_specs" / "data_specs" / "supplement_asec" / f"{dataset}.json")
+    )
+    df_out = _clean_one_dataset_yearly(df_in, data_specs)
+    df_out.to_csv(BLD / "out" / "data" / "supplement_asec" / name_out, index=False)
