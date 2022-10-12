@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -204,7 +205,9 @@ def _compile_long_monthly_df(in_data, out_path):
         # append current data to output df
         analysis_df = pd.concat([analysis_df, tmp_df[cols_analysis]], axis=0)
 
-    return analysis_df
+    analysis_df.to_csv(out_path, index=False)
+
+    return
 
 
 def _deflate_payments(df, cols, base):
@@ -817,8 +820,25 @@ def _join_transitions(df_from, df_to, lag):
 
 if __name__ == "__main__":
 
-    cps_data_monthly = _compile_long_monthly_df()
+    survey_name = "basic_monthly"
 
-    cps_data_monthly.to_csv(
-        DAT / "cps" / "basic_monthly" / "results" / "cps_data_monthly.csv", index=False
+    date_start = datetime.strptime(
+        data_instructions[survey_name]["date_start"],
+        data_instructions[survey_name]["date_format"],
     )
+    date_end = datetime.strptime(
+        data_instructions[survey_name]["date_end"],
+        data_instructions[survey_name]["date_format"],
+    )
+    frequency = data_instructions[survey_name]["frequency"]
+    prefix = data_instructions[survey_name]["prefix"]
+
+    file_names = pd.date_range(date_start, date_end, freq=frequency).strftime(
+        data_instructions[survey_name]["date_format"]
+    )
+    file_names = [f"{prefix}_{file}.csv" for file in file_names]
+
+    deps = [DAT / "cps" / survey_name / "formatted" / x for x in file_names]
+    prod = DAT / "cps" / survey_name / "results" / f"cps_{survey_name}_extract.csv"
+
+    _compile_long_monthly_df(deps, prod)
