@@ -5,9 +5,12 @@
 import pytask
 
 from src.config import BLD
+from src.config import DAT
 
-data = BLD / "out" / "data" / "cps_supplement_tenure_extract.csv"
-prod = BLD / "out" / "results" / "cps_returns_to_tenure.csv"
+data = (
+    DAT / "cps" / "supplement_tenure" / "results" / "cps_supplement_tenure_extract.csv"
+)
+prod = BLD / "results" / "cps_returns_to_tenure.csv"
 
 
 @pytask.mark.r(

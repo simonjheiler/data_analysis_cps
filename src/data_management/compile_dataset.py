@@ -1,6 +1,4 @@
 import json
-import os
-import re
 from datetime import datetime
 
 import numpy as np
@@ -8,10 +6,7 @@ import pandas as pd
 
 from src.config import DAT
 from src.config import SRC
-from src.data_management.format_one_dataset_supplement_asec import (
-    _clean_one_dataset_yearly,
-)
-from src.data_management.format_one_dataset_supplement_tenure import format_one_dataset
+from src.data_management.compile_monthly_data_cps import _compile_long_monthly_df
 
 #####################################################
 # PARAMETERS
@@ -40,17 +35,17 @@ dtypes_dict = {
         "race": str,
         "marital_status": str,
         "citizenship_status": str,
-        "earnings_weekly": str,
-        "hours_worked": str,
-        "weight_personal": str,
-        "weight_earnings": str,
-        "weight_supplement": str,
+        "earnings_weekly": float,
+        "hours_worked": float,
+        "weight_personal": float,
+        "weight_earnings": float,
+        "weight_supplement": float,
     },
     "supplement_tenure": {
         "year": int,
         "state": str,
         "sex": str,
-        "age": int,
+        "age": float,
         "education": str,
         "labor_force_status": str,
         "race": str,
@@ -63,86 +58,71 @@ dtypes_dict = {
     },
 }
 
+cols_analysis = {
+    "supplement_asec": [
+        "year",
+        "age",
+        "state",
+        "sex",
+        "education",
+        "marital_status",
+        "race",
+        "labor_force_status",
+        "weight_personal",
+        "weight_earnings",
+        "weight_supplement",
+        "hours_worked",
+        "earnings_weekly",
+    ],
+    "supplement_tenure": [
+        "year",
+        "state",
+        "age",
+        "age_group",
+        "sex",
+        "race",
+        "marital_status",
+        "education",
+        "labor_force_status",
+        "tenure",
+        "earnings_weekly",
+        "hours_worked",
+        "weight",
+    ],
+}
+
 #####################################################
 # FUNCTIONS
 #####################################################
 
 
-def _compile_long_df_supplement_tenure(in_data, out_path):
+def _compile_long_df_supplement(in_data, out_path, survey_name):
 
-    survey_name = "supplement_tenure"
-
-    cols_analysis = [
-        "year",
-        "state",
-        "sex",
-        "age",
-        "age_group",
-        "marital_status",
-        "race",
-        "education",
-        "labor_force_status",
-        "citizenship_status",
-        "tenure",
-        "earnings_weekly",
-        "earnings_weekly_deflated",
-        "hours_worked",
-        "weight",
-    ]
+    base_year = 2002
+    cols_out = cols_analysis[survey_name]
     cols_payments = ["earnings_weekly"]
+    cols_out += [col + "_deflated" for col in cols_payments]
 
     # initiate object to store data and iterable
-    df = pd.DataFrame(columns=cols_analysis)
+    df = pd.DataFrame(columns=cols_out)
 
     if type(in_data) is dict:
         in_data = [*in_data.values()]
 
     for dataset in in_data:
 
-        # get data specs
-        filename = os.path.basename(dataset)
-        specs_name = re.sub(".csv", ".json", filename)
-        specs_name = re.sub("_raw", "", specs_name)
-        specs = json.load(
-            open(SRC / "data_specs" / "data_specs" / survey_name / specs_name)
-        )
-
-        # get data types
-        dtypes = {
-            specs["var_dict"][var]: dtypes_dict[survey_name][var]
-            for var in specs["var_dict"].keys()
-        }
-
         # read in data set
         tmp_df = pd.read_csv(
-            dataset,
-            dtype=dtypes,
+            dataset, dtype=dtypes_dict[survey_name], index_col="match_identifier"
         )
-
-        # format data
-        tmp_df = format_one_dataset(tmp_df, specs)
 
         # deflate wages
-        tmp_df = _deflate_payments(tmp_df, cols_payments, 2002)
+        tmp_df = _deflate_payments(tmp_df, cols_payments, base_year)
 
-        # change column labels in accordance with output df
-        tmp_df = tmp_df.rename(
-            columns={
-                "labor_force_status_reduced": "labor_force_status",
-                "education_reduced": "education",
-                "race_reduced": "race",
-                "marital_status_reduced": "marital_status",
-            }
-        )
+        # append data
+        df = pd.concat([df, tmp_df[cols_out]], axis=0)
 
-        # make sure all required columns exist, if not, fill with nan
-        for col in cols_analysis:
-            if col not in tmp_df.columns:
-                tmp_df.loc[:, col] = np.nan
-
-        # append current data to output df
-        df = pd.concat([df, tmp_df[cols_analysis]], axis=0)
-
+    # store data
     df.to_csv(out_path)
 
     return
@@ -152,22 +132,12 @@ def _compile_long_df_supplement_asec(in_data, out_path):
 
     survey_name = "supplement_asec"
 
-    cols_out = [
-        "year",
-        "state",
-        "age",
-        "race",
-        "marital_status",
-        "education",
-        "labor_force_status",
-        "earnings_weekly",
-        "hours_worked",
-        "weight_personal",
-        "weight_earnings",
-        "weight_supplement",
-    ]
+    base_year = 2002
+    cols_out = cols_analysis[survey_name]
     cols_payments = ["earnings_weekly"]
+    cols_out += [col + "_deflated" for col in cols_payments]
 
+    # initiate object to store data and iterable
     df = pd.DataFrame(columns=cols_out)
 
     if type(in_data) is dict:
@@ -175,36 +145,18 @@ def _compile_long_df_supplement_asec(in_data, out_path):
 
     for dataset in in_data:
 
-        # get data specs
-        filename = os.path.basename(dataset)
-        specs_name = re.sub(".csv", ".json", filename)
-        specs_name = re.sub("_raw", "", specs_name)
-        specs = json.load(
-            open(SRC / "data_specs" / "data_specs" / survey_name / specs_name)
-        )
-
-        # get data types
-        dtypes = {
-            specs["var_dict"][var]: dtypes_dict[survey_name][var]
-            for var in specs["var_dict"].keys()
-        }
-
         # read in data set
         tmp_df = pd.read_csv(
-            dataset,
-            dtype=dtypes,
-            # index_col=specs["var_dict"]["id"],
+            dataset, dtype=dtypes_dict[survey_name], index_col="match_identifier"
         )
 
-        # format data
-        tmp_df = _clean_one_dataset_yearly(tmp_df, specs)
-
         # deflate wages
-        tmp_df = _deflate_payments(tmp_df, cols_payments, 2002)
+        tmp_df = _deflate_payments(tmp_df, cols_payments, base_year)
 
-        # store data
+        # append data
         df = pd.concat([df, tmp_df[cols_out]], axis=0)
 
+    # store data
     df.to_csv(out_path)
 
     return
@@ -213,12 +165,9 @@ def _compile_long_df_supplement_asec(in_data, out_path):
 def _compile_long_df(data, prod, survey):
 
     if survey == "basic_monthly":
-        pass
-        # _compile_long_df_basic_monthly(data, prod)
-    elif survey == "supplement_asec":
-        _compile_long_df_supplement_asec(data, prod)
-    elif survey == "supplement_tenure":
-        _compile_long_df_supplement_tenure(data, prod)
+        _compile_long_monthly_df(data, prod)
+    elif survey in ["supplement_asec", "supplement_tenure"]:
+        _compile_long_df_supplement(data, prod, survey)
     else:
         raise ValueError(
             f"survey name {survey} unknown;"
@@ -253,7 +202,7 @@ def _deflate_payments(df, cols, base):
 
 if __name__ == "__main__":
 
-    survey_name = "supplement_asec"
+    survey_name = "supplement_tenure"
 
     date_start = datetime.strptime(
         data_instructions[survey_name]["date_start"],
@@ -269,9 +218,9 @@ if __name__ == "__main__":
     file_names = pd.date_range(date_start, date_end, freq=frequency).strftime(
         data_instructions[survey_name]["date_format"]
     )
-    file_names = [f"{prefix}_{file}_raw.csv" for file in file_names]
+    file_names = [f"{prefix}_{file}.csv" for file in file_names]
 
-    deps = [DAT / "cps" / survey_name / "temp" / x for x in file_names]
+    deps = [DAT / "cps" / survey_name / "formatted" / x for x in file_names]
     prod = DAT / "cps" / survey_name / "results" / f"cps_{survey_name}_extract.csv"
 
     _compile_long_df(deps, prod, survey_name)
