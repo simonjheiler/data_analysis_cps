@@ -1,11 +1,9 @@
-import datetime
 import json
 import sys
 
 import numpy as np
 import pandas as pd
 
-from src.config import BLD
 from src.config import DAT
 from src.config import SRC
 from src.utilities.format_utils import _add_categorical_variables
@@ -303,49 +301,13 @@ if __name__ == "__main__":
     except IndexError:
         dataset = "cpsb_2002-01"
 
-    try:
-        name_in = dataset + "_raw.csv"
-        name_out = dataset + ".csv"
-        df_in = pd.read_csv(
-            BLD / "out" / "data" / "basic_monthly" / "raw" / name_in, dtype=str
-        )
-        data_specs = json.load(
-            open(
-                SRC / "data_specs" / "data_specs" / "basic_monthly" / f"{dataset}.json"
-            )
-        )
-        df_out = _clean_one_dataset_monthly(df_in, data_specs)
-        df_out.to_csv(BLD / "out" / "data" / "basic_monthly" / name_out, index=True)
-        log = dataset + ": " + str(datetime.datetime.now()) + " - OK! \n"
-    except FileNotFoundError:
-        log = (
-            dataset
-            + ": "
-            + str(datetime.datetime.now())
-            + " - Error! File not Found. \n"
-        )
-
-    # try:
-    #     logfile = open(
-    #         ppj("OUT_DATA", "cps_monthly", "format_data_cps_monthly_log.txt")
-    #     )
-    #     entries = logfile.readlines()
-    # except FileNotFoundError:
-    #     entries = []
-    #
-    # in_log = False
-    # for idx, line in enumerate(entries):
-    #     if dataset in line:
-    #         entries[idx] = log
-    #         in_log = True
-    #
-    # if not in_log:
-    #     entries.append(log)
-    #
-    # entries = [entry for entry in entries if entry != " \n"]
-    #
-    # logfile = open(
-    #     ppj("OUT_DATA", "cps_monthly", "format_data_cps_monthly_log.txt"), "w"
-    # )
-    # for line in entries:
-    #     logfile.write(f"{line}")
+    df_in = pd.read_csv(
+        DAT / "cps" / "basic_monthly" / "temp" / f"{dataset}_raw.csv", dtype=str
+    )
+    data_specs = json.load(
+        open(SRC / "data_specs" / "data_specs" / "basic_monthly" / f"{dataset}.json")
+    )
+    df_out = _clean_one_dataset_monthly(df_in, data_specs)
+    df_out.to_csv(
+        DAT / "cps" / "basic_monthly" / "formatted" / f"{dataset}.csv", index=True
+    )

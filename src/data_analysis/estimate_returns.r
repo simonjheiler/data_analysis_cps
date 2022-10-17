@@ -6,7 +6,7 @@ education from CPS data.
 # read in arguments (1: path input file, 2: path output file)
 args <- commandArgs(trailingOnly=TRUE)
 # args <- c(
-#   "C:\\Users\\user\\projects\\data_analysis_cps\\bld\\out\\data\\cps_supplement_tenure_extract.csv",
+#   "D:\\data\\cps\\supplement_tenure\\results\\cps_supplement_tenure_extract.csv",
 #   "C:\\Users\\user\\projects\\data_analysis_cps\\bld\\out\\results\\cps_returns_to_tenure.csv"
 # )
 
