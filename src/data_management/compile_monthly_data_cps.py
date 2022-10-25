@@ -73,6 +73,8 @@ data_types_cps_monthly = {
     "education_reduced": "category",
     "labor_force_status_reduced": "category",
     "marital_status_reduced": "category",
+    "same_employer": "category",
+    "same_occupation": "category",
     "weight_long": float,
     "weight_personal": float,
 }
@@ -112,6 +114,8 @@ def _compile_long_monthly_df(in_data, out_path):
         "working_spouse",
         "labor_force_status",
         "n_children",
+        "same_employer",
+        "same_occupation",
         "weight_long",
         "weight_personal",
         "weight_bls",

@@ -107,6 +107,8 @@ def _clean_one_dataset_monthly(df, specs):
         "marital_status_reduced",
         "race_reduced",
         "spousal_status",
+        "same_employer",
+        "same_occupation",
     ]
 
     cols_out = cols_int + cols_str + cols_int8 + cols_categorical + cols_numeric
@@ -135,9 +137,10 @@ def _clean_one_dataset_monthly(df, specs):
     cols_req = cols_match + ["month_in_sample"]
     df.loc[:, "no_match"] = pd.isna(df[cols_req]).any(axis=1)
 
-    # add column for number of children if missing
-    if "n_children" not in df.columns:
-        df.loc[:, "n_children"] = np.nan
+    # add columns for variables not contained in all surveys (where missing)
+    for var in ["n_children", "same_employer", "same_occupation"]:
+        if var not in df.columns:
+            df.loc[:, var] = np.nan
 
     # replace answer codes with values
     df = _clean_variables(df, specs)
