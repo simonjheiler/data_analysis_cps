@@ -37,21 +37,36 @@ for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
         NO_RAW_FILES, reason="Skip extraction from and formatting of raw data files."
     )
     @pytask.mark.parametrize(
-        "depends_on, produces, survey_name, spec_path",
+        "depends_on, produces, survey_name",
         [
             (
-                DAT / "cps" / survey_name / "temp" / f"{file_name}_raw.csv",
+                [
+                    SRC / "data_management" / f"format_one_dataset_{survey_name}.py",
+                    SRC
+                    / "data_specs"
+                    / "data_specs"
+                    / survey_name
+                    / f"{file_name}.json",
+                    DAT / "cps" / survey_name / "temp" / f"{file_name}_raw.csv",
+                ],
                 DAT / "cps" / survey_name / "formatted" / f"{file_name}.csv",
                 survey_name,
-                SRC / "data_specs" / "data_specs" / survey_name / f"{file_name}.json",
             )
             for file_name in file_names
         ],
     )
-    def task_format_data(depends_on, produces, survey_name, spec_path):
-        df_in = pd.read_csv(depends_on, dtype=str)
-        data_specs = json.load(open(spec_path))
+    def task_format_data(depends_on, produces, survey_name):
 
+        # get file paths
+        spec_path = depends_on[1]
+        in_path = depends_on[2]
+        out_path = produces
+
+        # read in data specs and raw dataset
+        data_specs = json.load(open(spec_path))
+        df_in = pd.read_csv(in_path, dtype=str)
+
+        # format dataset
         if survey_name == "basic_monthly":
             df_out = _clean_one_dataset_monthly(df_in, data_specs)
         elif survey_name == "supplement_asec":
@@ -64,4 +79,5 @@ for survey_name in ["basic_monthly", "supplement_asec", "supplement_tenure"]:
                 "['basic_monthly', 'supplement_asec', 'supplement_tenure']"
             )
 
-        df_out.to_csv(produces, index=True)
+        # store formatted dataset
+        df_out.to_csv(out_path, index=True)
