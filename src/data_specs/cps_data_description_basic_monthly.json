@@ -23,6 +23,7 @@
       "hourly_rate": "a_herntp",
       "hours_worked": "",
       "same_employer": "",
+      "same_occupation": "",
       "weight_long": "l_lngwgt",
       "weight_personal": "a_fnlwgt",
       "weight_bls": ""
@@ -57,6 +58,7 @@
       "hourly_rate": "a_herntp",
       "hours_worked": "",
       "same_employer": "",
+      "same_occupation": "",
       "weight_long": "l_lngwgt",
       "weight_personal": "a_fnlwgt",
       "weight_bls": ""
@@ -91,6 +93,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": ""
@@ -125,6 +128,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": ""
@@ -159,6 +163,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": ""
@@ -193,6 +198,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": ""
@@ -227,6 +233,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -261,6 +268,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -295,6 +303,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -329,6 +338,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -363,6 +373,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -397,6 +408,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -431,6 +443,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -465,6 +478,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -499,6 +513,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -533,6 +548,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -567,6 +583,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -601,6 +618,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
@@ -635,6 +653,7 @@
       "hourly_rate": "prernhly",
       "hours_worked": "peernhro",
       "same_employer": "puiodp1",
+      "same_occupation": "puiodp3",
       "weight_long": "pwlgwgt",
       "weight_personal": "pwsswgt",
       "weight_bls": "pwcmpwgt"
