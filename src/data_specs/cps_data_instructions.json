@@ -23,6 +23,8 @@
       "earnings_weekly",
       "hourly_rate",
       "hours_worked",
+      "same_employer",
+      "same_occupation",
       "weight_long",
       "weight_personal",
       "weight_bls"
