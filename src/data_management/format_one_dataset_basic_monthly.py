@@ -109,6 +109,9 @@ def _clean_one_dataset_monthly(df, specs):
         "spousal_status",
         "same_employer",
         "same_occupation",
+        "occupation_code_1_l1",
+        "occupation_code_1_l2",
+        "occupation_code_1_l3",
     ]
 
     cols_out = cols_int + cols_str + cols_int8 + cols_categorical + cols_numeric
@@ -302,7 +305,7 @@ if __name__ == "__main__":
     try:
         dataset = sys.argv[1]
     except IndexError:
-        dataset = "cpsb_2002-01"
+        dataset = "cpsb_2000-07"
 
     df_in = pd.read_csv(
         DAT / "cps" / "basic_monthly" / "temp" / f"{dataset}_raw.csv", dtype=str
