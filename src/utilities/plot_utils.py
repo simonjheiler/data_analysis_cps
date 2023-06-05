@@ -170,6 +170,54 @@ def _plot_frequency(data, params):
     plt.close()
 
 
+def plot_line(plot_data, plot_params):
+
+    x = np.arange(plot_data.shape[0]) + 1
+    if plot_data.ndim == 1:
+        plot_data = pd.DataFrame(plot_data)
+
+    data_series = plot_data.columns
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    fig.tight_layout(rect=(0.1, 0.1, 1, 1))
+
+    for idx, series in enumerate(data_series):
+        ax.plot(
+            x,
+            plot_data[series],
+            linestyle=linestyles[idx],
+            marker=markers[idx],
+            label=data_series[idx],
+        )
+
+    # format axes
+    ax.set_xlabel(plot_params["xlabel"])
+    ax.set_xticks(ticks=plot_params["xticks"][0], labels=plot_params["xticks"][1])
+
+    ax.set_ylabel(plot_params["ylabel"])
+    ax.set_ylim(plot_params["ylim"][:2])
+    ax.set_yticks(
+        np.arange(
+            plot_params["ylim"][0], plot_params["ylim"][1], plot_params["ylim"][2]
+        )
+    )
+
+    # ax.set_title(plot_params["title"])
+
+    # format plot area
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    # add legend
+    if plot_params["legend"]:
+        ax.legend(loc="upper right", ncol=3)
+
+    # save figure
+    fig.savefig(plot_params["outpath"])
+    plt.close()
+
+
 def _plot_frequency_over_time(data, params):
 
     for col in data.columns:
