@@ -193,7 +193,7 @@ def plot_line(plot_data, plot_params):
 
     # format axes
     ax.set_xlabel(plot_params["xlabel"])
-    ax.set_xticks(ticks=plot_params["xticks"][0], labels=plot_params["xticks"][1])
+    # ax.set_xticks(ticks=plot_params["xticks"][0], labels=plot_params["xticks"][1])
 
     ax.set_ylabel(plot_params["ylabel"])
     ax.set_ylim(plot_params["ylim"][:2])

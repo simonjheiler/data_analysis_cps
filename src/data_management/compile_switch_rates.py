@@ -217,425 +217,175 @@ def _join_transitions(df_from, df_to, lag):
             suffixes=("_from", "_to"),
         )
 
-    # calculate booleans for separations, matches, labor market entry,
-    cols_transitions = [
-        f"loss_{lag}m",
-        f"finding_{lag}m",
-        f"entry_{lag}m",
-        f"exit_{lag}m",
-        "employer_switch",
-        "occupation_switch",
-        "occupation_switch_cond",
-        f"occ_1_switch_{lag}m",
-        f"occ_1_switch_cond_{lag}m",
-        f"occ_2_switch_{lag}m",
-        f"occ_2_switch_cond_{lag}m",
-        f"occ_3_switch_{lag}m",
-        f"occ_3_switch_cond_{lag}m",
-    ]
+    # calculate booleans for separations, job finding, labor market exit,
+    # labor market entry, employer change (self-reported) occupation change
+    # (self-reported), occupation change based on occupation code (level 1, 2,
+    # and 3) and occupation change based on occupation code (level 1, 2,
+    # and 3) conditional on employer change (self-reported)
 
-    # labor market exit, occupation change (level 1, 2, and 3)
-    for col in cols_transitions:
-        out_df.loc[:, col] = np.nan
+    # separation events:
+    #   - base is all workers that are currently employed and where next period
+    #     labor force status is not unknown
+    #   - event is a transition from being employed to being unemployed
+    out_df.loc[:, "base_separation"] = np.logical_and(
+        out_df.loc[:, "labor_force_status_reduced_from"] == "employed",
+        ~out_df.loc[:, "labor_force_status_reduced_to"].isna(),
+    )
+    out_df.loc[:, "separation"] = np.logical_and(
+        out_df["labor_force_status_reduced_from"] == "employed",
+        out_df["labor_force_status_reduced_to"] == "unemployed",
+    )
 
-    # for matches and separations, only capture workers that are in the
-    # labor force in both months (excluding all 'not in labor force' transitions)
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "employed",
-                out_df["labor_force_status_reduced_to"] == "employed",
-            ),
-            :,
-        ].index,
-        f"loss_{lag}m",
-    ] = False
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "employed",
-                out_df["labor_force_status_reduced_to"] == "unemployed",
-            ),
-            :,
-        ].index,
-        f"loss_{lag}m",
-    ] = True
+    # job finding event:
+    #   - base is all workers that are currently unemployed and where next period
+    #     labor force status is not unknown
+    #   - event is a transition from being unemployed to being employed
+    out_df.loc[:, "base_finding"] = np.logical_and(
+        out_df.loc[:, "labor_force_status_reduced_from"] == "unemployed",
+        ~out_df.loc[:, "labor_force_status_reduced_to"].isna(),
+    )
+    out_df.loc[:, "finding"] = np.logical_and(
+        out_df["labor_force_status_reduced_from"] == "unemployed",
+        out_df["labor_force_status_reduced_to"] == "employed",
+    )
 
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "unemployed",
-                out_df["labor_force_status_reduced_to"] == "unemployed",
-            ),
-            :,
-        ].index,
-        f"finding_{lag}m",
-    ] = False
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "unemployed",
-                out_df["labor_force_status_reduced_to"] == "employed",
-            ),
-            :,
-        ].index,
-        f"finding_{lag}m",
-    ] = True
-
-    # capture all workers
-    # (including 'not in labor force' transitions)
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "employed",
-                out_df["labor_force_status_reduced_to"] == "employed",
-            ),
-            :,
-        ].index,
-        f"exit_{lag}m",
-    ] = False
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "employed",
-                out_df["labor_force_status_reduced_to"] == "unemployed",
-            ),
-            :,
-        ].index,
-        f"exit_{lag}m",
-    ] = False
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "employed",
-                out_df["labor_force_status_reduced_to"] == "not in labor force",
-            ),
-            :,
-        ].index,
-        f"exit_{lag}m",
-    ] = True
-
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "not in labor force",
-                out_df["labor_force_status_reduced_to"] == "employed",
-            ),
-            :,
-        ].index,
-        f"entry_{lag}m",
-    ] = True
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "not in labor force",
-                out_df["labor_force_status_reduced_to"] == "unemployed",
-            ),
-            :,
-        ].index,
-        f"entry_{lag}m",
-    ] = True
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                out_df["labor_force_status_reduced_from"] == "not in labor force",
-                out_df["labor_force_status_reduced_to"] == "not in labor force",
-            ),
-            :,
-        ].index,
-        f"entry_{lag}m",
-    ] = False
-
-    # changes in occupation code
-    # only for workers that are in the labor force in both periods
-
-    # level 1
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l1_from"]
-                != out_df["occupation_code_1_l1_to"],
-            ),
-            :,
-        ].index,
-        f"occ_1_switch_{lag}m",
-    ] = True
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l1_from"]
-                == out_df["occupation_code_1_l1_to"],
-            ),
-            :,
-        ].index,
-        f"occ_1_switch_{lag}m",
-    ] = False
-
-    # level 2
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l2_from"]
-                != out_df["occupation_code_1_l2_to"],
-            ),
-            :,
-        ].index,
-        f"occ_2_switch_{lag}m",
-    ] = True
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l2_from"]
-                == out_df["occupation_code_1_l2_to"],
-            ),
-            :,
-        ].index,
-        f"occ_2_switch_{lag}m",
-    ] = False
-    # level 2
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l2_from"]
-                != out_df["occupation_code_1_l2_to"],
-            ),
-            :,
-        ].index,
-        f"occ_2_switch_{lag}m",
-    ] = True
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l2_from"]
-                == out_df["occupation_code_1_l2_to"],
-            ),
-            :,
-        ].index,
-        f"occ_2_switch_{lag}m",
-    ] = False
-
-    # level 3
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l3_from"]
-                != out_df["occupation_code_1_l3_to"],
-            ),
-            :,
-        ].index,
-        f"occ_3_switch_{lag}m",
-    ] = True
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_from"] == "employed",
-                        out_df["labor_force_status_reduced_from"] == "unemployed",
-                    ),
-                    np.logical_or(
-                        out_df["labor_force_status_reduced_to"] == "employed",
-                        out_df["labor_force_status_reduced_to"] == "unemployed",
-                    ),
-                ),
-                out_df["occupation_code_1_l3_from"]
-                == out_df["occupation_code_1_l3_to"],
-            ),
-            :,
-        ].index,
-        f"occ_3_switch_{lag}m",
-    ] = False
-
-    # employer switch based on self-reported flag
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    out_df["labor_force_status_reduced_from"] == "employed",
-                    out_df["labor_force_status_reduced_to"] == "employed",
-                ),
-                out_df["same_employer"] == "YES",
-            ),
-            :,
-        ].index,
-        "employer_switch",
-    ] = False
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    out_df["labor_force_status_reduced_from"] == "employed",
-                    out_df["labor_force_status_reduced_to"] == "employed",
-                ),
-                out_df["same_employer"] == "NO",
-            ),
-            :,
-        ].index,
-        "employer_switch",
-    ] = True
-
-    # occupation switch based on self-reported flag
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    out_df["labor_force_status_reduced_from"] == "employed",
-                    out_df["labor_force_status_reduced_to"] == "employed",
-                ),
-                out_df["same_occupation"] == "YES",
-            ),
-            :,
-        ].index,
-        "occupation_switch",
-    ] = False
-    out_df.loc[
-        out_df.loc[
-            np.logical_and(
-                np.logical_and(
-                    out_df["labor_force_status_reduced_from"] == "employed",
-                    out_df["labor_force_status_reduced_to"] == "employed",
-                ),
-                out_df["same_occupation"] == "NO",
-            ),
-            :,
-        ].index,
-        "occupation_switch",
-    ] = True
-
-    # construct occupation switch conditional on employer switch
-    out_df.loc[
-        np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occupation_switch"] == True,
+    # labor force exit event:
+    #   - base is all workers that are currently in the labor force and where next
+    #     period labor force status is not unknown
+    #   - event is transition from in the labor force (employed or unemployed) to
+    #     not in the labor force
+    out_df.loc[:, "base_exit"] = np.logical_and(
+        np.logical_or(
+            out_df.labor_force_status_reduced_from == "employed",
+            out_df.labor_force_status_reduced_from == "unemployed",
         ),
-        "occupation_switch_cond",
-    ] = True
-    out_df.loc[
-        np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occupation_switch"] == False,
-        ),
-        "occupation_switch_cond",
-    ] = False
+        ~out_df["labor_force_status_reduced_to"].isna(),
+    )
+    out_df.loc[:, "exit"] = np.logical_and(
+        out_df.loc[:, "base_exit"],
+        out_df.labor_force_status_reduced_to == "not in labor force",
+    )
 
-    out_df.loc[
-        np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occ_1_switch_1m"] == True,
+    # labor force entry event:
+    #   - base is all workers that are currently not in the labor force and where
+    #     next period labor force status is not unknown
+    #   - event is transition from not in labor force to in the labor force
+    #     (employed or unemployed)
+    out_df.loc[:, "base_entry"] = np.logical_and(
+        out_df.labor_force_status_reduced_from == "not in labor force",
+        ~out_df["labor_force_status_reduced_to"].isna(),
+    )
+    out_df.loc[:, "entry"] = np.logical_and(
+        out_df.loc[:, "base_entry"],
+        np.logical_or(
+            out_df.labor_force_status_reduced_to == "employed",
+            out_df.labor_force_status_reduced_to == "unemployed",
         ),
-        f"occ_1_switch_cond_{lag}m",
-    ] = True
-    out_df.loc[
-        np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occ_1_switch_1m"] == False,
-        ),
-        f"occ_1_switch_cond_{lag}m",
-    ] = False
+    )
 
-    out_df.loc[
+    # employer change event (self-reported):
+    #   - base is all workers that are employed in both periods and have
+    #     reported ("YES" or "NO") on "same employer" question
+    #   - event is reporting "NO"
+    out_df.loc[:, "base_employer_change"] = np.logical_and(
         np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occ_2_switch_1m"] == True,
+            out_df.loc[:, "labor_force_status_reduced_from"] == "employed",
+            out_df.loc[:, "labor_force_status_reduced_to"] == "employed",
         ),
-        f"occ_2_switch_cond_{lag}m",
-    ] = True
-    out_df.loc[
-        np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occ_2_switch_1m"] == False,
+        np.logical_or(
+            out_df.loc[:, "same_employer"] == "YES",
+            out_df.loc[:, "same_employer"] == "NO",
         ),
-        f"occ_2_switch_cond_{lag}m",
-    ] = False
+    )
+    out_df.loc[:, "employer_change"] = np.logical_and(
+        out_df.loc[:, "base_employer_change"], out_df.loc[:, "same_employer"] == "NO"
+    )
 
-    out_df.loc[
+    # occupation change event (self-reported):
+    #   - base is all workers that are in the labor force in both periods and
+    #     have reported ("YES" or "NO") on "same occupation" question
+    #   - event is being in the labor force in both periods and reporting "NO"
+    out_df.loc[:, "base_occupation_change"] = np.logical_and(
         np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occ_3_switch_1m"] == True,
+            np.logical_or(
+                out_df.loc[:, "labor_force_status_reduced_from"] == "employed",
+                out_df.loc[:, "labor_force_status_reduced_from"] == "unemployed",
+            ),
+            np.logical_or(
+                out_df.loc[:, "labor_force_status_reduced_to"] == "employed",
+                out_df.loc[:, "labor_force_status_reduced_to"] == "unemployed",
+            ),
         ),
-        f"occ_3_switch_cond_{lag}m",
-    ] = True
-    out_df.loc[
-        np.logical_and(
-            out_df["employer_switch"] == True,
-            out_df["occ_3_switch_1m"] == False,
+        np.logical_or(
+            out_df.loc[:, "same_occupation"] == "YES",
+            out_df.loc[:, "same_occupation"] == "NO",
         ),
-        f"occ_3_switch_cond_{lag}m",
-    ] = False
+    )
+    out_df.loc[:, "occupation_change"] = np.logical_and(
+        out_df.loc[:, "base_occupation_change"],
+        out_df.loc[:, "same_occupation"] == "NO",
+    )
 
-    # convert to numeric
-    for col in cols_transitions:
-        out_df.loc[:, col] = out_df.loc[:, col].astype(float)
+    # occupation change event (based on occupation codes):
+    #   - base is all workers that are in the labor force in both periods and where
+    #     occupation codes are not unknown for both periods
+    #   - event is being in the labor force in both periods and the occupation codes
+    #     being not the same for both periods
+    for level in ["1", "2", "3"]:
+        out_df.loc[:, f"base_occ_{level}_change"] = np.logical_and(
+            np.logical_and(
+                np.logical_or(
+                    out_df.loc[:, "labor_force_status_reduced_from"] == "employed",
+                    out_df.loc[:, "labor_force_status_reduced_from"] == "unemployed",
+                ),
+                np.logical_or(
+                    out_df.loc[:, "labor_force_status_reduced_to"] == "employed",
+                    out_df.loc[:, "labor_force_status_reduced_to"] == "unemployed",
+                ),
+            ),
+            np.logical_and(
+                ~out_df.loc[:, f"occupation_code_1_l{level}_from"].isna(),
+                ~out_df.loc[:, f"occupation_code_1_l{level}_to"].isna(),
+            ),
+        )
+        out_df.loc[:, f"occ_{level}_change"] = np.logical_and(
+            out_df.loc[:, f"base_occ_{level}_change"],
+            (
+                out_df.loc[:, f"occupation_code_1_l{level}_from"]
+                != out_df.loc[:, f"occupation_code_1_l{level}_to"]
+            ),
+        )
+
+    # occupation change (self-reported) conditional on employer change (self-reported)
+    #   - base is all workers that have reported "NO" on "same employer" questions and
+    #     that have reported ("YES" or "NO") on "same occupation" question
+    #   - event is reporting "NO" on "same employer" question and "NO" on "same occupation"
+    #     question
+    out_df.loc[:, "base_occupation_change_cond"] = np.logical_and(
+        out_df.loc[:, "base_occupation_change"],
+        out_df.loc[:, "employer_change"],
+    )
+    out_df.loc[:, "occupation_change_cond"] = np.logical_and(
+        out_df.loc[:, "base_occupation_change_cond"],
+        out_df.loc[:, "same_occupation"] == "NO",
+    )
+
+    # occupation change (based on occupation codes) conditional on employer change
+    # (self-reported)
+    #   - base is all workers that have reported "NO" on "same employer" questions and
+    #     that are in the labor force in both periods and where occupation codes are not
+    #     unknown for both periods
+    #   - event is reporting "NO" on "same employer" question and being in the labor force
+    #     in both periods and the occupation codes being not the same for both periods
+    for level in ["1", "2", "3"]:
+        out_df.loc[:, f"base_occ_{level}_change_cond"] = np.logical_and(
+            out_df.loc[:, "employer_change"], out_df.loc[:, f"base_occ_{level}_change"]
+        )
+        out_df.loc[:, f"occ_{level}_change_cond"] = np.logical_and(
+            out_df.loc[:, f"base_occ_{level}_change_cond"],
+            out_df.loc[:, f"occupation_code_1_l{level}_from"]
+            != out_df.loc[:, f"occupation_code_1_l{level}_to"],
+        )
 
     # remove unused columns and relabel changed column to original names
     out_df = out_df.drop(columns=["labor_force_status_reduced_to"])
@@ -657,19 +407,32 @@ def _compile_switch_rates(in_data, out_path):
         "employed",
         "unemployed",
         "not_in_labor_force",
-        "finding_1m",
-        "loss_1m",
-        "entry_1m",
-        "exit_1m",
-        "employer_switch",
-        "occupation_switch",
-        "occupation_switch_cond",
-        "occ_1_switch_1m",
-        "occ_2_switch_1m",
-        "occ_3_switch_1m",
-        "occ_1_switch_cond_1m",
-        "occ_2_switch_cond_1m",
-        "occ_3_switch_cond_1m",
+        "separation",
+        "finding",
+        "entry",
+        "exit",
+        "employer_change",
+        "occupation_change",
+        "occupation_change_cond",
+        "occ_1_change",
+        "occ_2_change",
+        "occ_3_change",
+        "occ_1_change_cond",
+        "occ_2_change_cond",
+        "occ_3_change_cond",
+        "base_separation",
+        "base_finding",
+        "base_entry",
+        "base_exit",
+        "base_employer_change",
+        "base_occupation_change",
+        "base_occupation_change_cond",
+        "base_occ_1_change",
+        "base_occ_2_change",
+        "base_occ_3_change",
+        "base_occ_1_change_cond",
+        "base_occ_2_change_cond",
+        "base_occ_3_change_cond",
     ]
 
     cols_sum_weighted = [f"{col}_weighted" for col in cols_sum]
@@ -682,6 +445,7 @@ def _compile_switch_rates(in_data, out_path):
 
         # read in data
         in_file = in_data[index]
+        print(f"aggregating dataset {in_file}")
         df_tmp = pd.read_csv(in_file, dtype=data_types_cps_monthly)
 
         # drop observations with missing values in required field
@@ -725,6 +489,10 @@ def _compile_switch_rates(in_data, out_path):
             + df_tmp.loc[:, "month"].astype(str).str.pad(2, fillchar="0")
         )
 
+        # convert boolean columns to numeric
+        for col in cols_sum:
+            df_tmp.loc[:, col] = df_tmp.loc[:, col].astype(float)
+
         # get weighted values
         for col in cols_sum:
             df_tmp.loc[:, f"{col}_weighted"] = (
@@ -765,7 +533,8 @@ def _compile_switch_rates(in_data, out_path):
 
 if __name__ == "__main__":
 
-    date_start = "1994-02"
+    date_start = "1994-01"
+    # date_end = "2010-01"
     # date_start = datetime.strptime(
     #     data_instructions[survey_name]["date_start"],
     #     data_instructions[survey_name]["date_format"],
