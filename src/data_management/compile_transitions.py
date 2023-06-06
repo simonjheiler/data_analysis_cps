@@ -373,7 +373,7 @@ def _join_transitions(df_from, df_to, lag):
     # occupation change (based on occupation codes) conditional on employer change
     # (self-reported)
     #   - base is all workers that have reported "NO" on "same employer" questions and
-    #     that are in the labor force in both periods and where occupation codes are not
+    #     that are employed in both periods and where occupation codes are not
     #     unknown for both periods
     #   - event is reporting "NO" on "same employer" question and being in the labor force
     #     in both periods and the occupation codes being not the same for both periods

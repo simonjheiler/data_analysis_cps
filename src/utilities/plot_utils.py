@@ -193,7 +193,17 @@ def plot_line(plot_data, plot_params):
 
     # format axes
     ax.set_xlabel(plot_params["xlabel"])
-    # ax.set_xticks(ticks=plot_params["xticks"][0], labels=plot_params["xticks"][1])
+    xtick_ticks = plot_params["xticks"][0]
+    xtick_labels = plot_params["xticks"][1]
+    if len(xtick_ticks) > 10:
+
+        xtick_ticks = np.arange(0, len(xtick_ticks), len(xtick_ticks) // 5)
+        xtick_labels = [xtick_labels[i] for i in xtick_ticks]
+
+    # labels_of_interest = [str(i) for i in np.arange(235, 295, 5)]
+    # new_labels = [label if label in labels_of_interest else "" for label in original_labels]
+
+    ax.set_xticks(ticks=xtick_ticks, labels=xtick_labels)
 
     ax.set_ylabel(plot_params["ylabel"])
     ax.set_ylim(plot_params["ylim"][:2])

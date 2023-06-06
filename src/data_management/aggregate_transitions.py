@@ -112,6 +112,7 @@ def _aggregate_data(df_in):
     )
 
     date_start = pd.to_datetime("1995-09")
+    date_end = pd.to_datetime("2019-12")
 
     # date_occ88_stop = pd.to_datetime("2011-11")
     # date_occ10_start = pd.to_datetime("2011-12")
@@ -122,6 +123,7 @@ def _aggregate_data(df_in):
             pd.to_datetime("2004-04"),
             pd.to_datetime("2004-12"),
             pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
             pd.to_datetime("2012-04"),
             pd.to_datetime("2015-05"),
         ],
@@ -130,6 +132,7 @@ def _aggregate_data(df_in):
             pd.to_datetime("2002-12"),
             pd.to_datetime("2004-04"),
             pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
             pd.to_datetime("2012-04"),
             pd.to_datetime("2012-12"),
             pd.to_datetime("2015-05"),
@@ -147,6 +150,7 @@ def _aggregate_data(df_in):
 
     # drop observations from exclusion dates
     df_in = df_in.loc[(df_in.time_unit >= date_start), :]
+    df_in = df_in.loc[(df_in.time_unit <= date_end), :]
     df_in = _remove_data(df_in, dates_exclude)
 
     df_test = df_in.groupby("time_unit").sum().reset_index()

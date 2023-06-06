@@ -74,7 +74,9 @@ cohort_10_labels = [
 #####################################################
 
 
-def _plot_line_charts(df_year, df_age, df_cohort, df_age_cohort):
+def _plot_line_charts(
+    df_year, df_age, df_cohort, df_age_year, df_cohort_year, df_age_cohort
+):
 
     xticks = {
         "year": ([0, 5, 10, 15, 20, 25], [1995, 2000, 2005, 2010, 2015, 2020]),
@@ -83,48 +85,37 @@ def _plot_line_charts(df_year, df_age, df_cohort, df_age_cohort):
     ylabels = {
         "employer_change_rate": "1-month employer change rate (self-reported)",
         "occupation_change_rate": "1-month occupation change rate (self-reported)",
-        "occupation_change_cond_rate": "1-month occupation change rate (self-reported)",
-        "occ_1_change_rate": "1-month occupation change rate "
-        "(major occupation group, L1)",
-        "occ_2_change_rate": "1-month occupation change rate "
-        "(detailed occupation group, L2)",
+        "occupation_change_cond_rate": "1-month occupation change rate (self-reported) conditional on employer change",
+        "occ_1_change_rate": "1-month occupation change rate \n (major occupation group, L1)",
+        "occ_2_change_rate": "1-month occupation change rate \n (detailed occupation group, L2)",
         "occ_3_change_rate": "1-month occupation change rate (occupation, L3)",
-        "occ_1_change_cond_rate": "1-month occupation change rate conditional "
-        "on employer change (major occupation group, L1)",
-        "occ_2_change_cond_rate": "1-month occupation change rate conditional "
-        "on employer change (detailed occupation group, L2)",
-        "occ_3_change_cond_rate": "1-month occupation change rate conditional "
-        "on employer change (occupation, L3)",
+        "occ_1_change_cond_rate": "1-month occupation change rate conditional on employer change \n (major occupation group, L1)",
+        "occ_2_change_cond_rate": "1-month occupation change rate conditional on employer change \n (detailed occupation group, L2)",
+        "occ_3_change_cond_rate": "1-month occupation change rate conditional on employer change \n (occupation, L3)",
         "employer_change_weighted_rate": "1-month employer change rate (self-reported)",
         "occupation_change_weighted_rate": "1-month occupation change rate (self-reported)",
-        "occupation_change_cond_weighted_rate": "1-month occupation change rate "
-        "(self-reported)",
-        "occ_1_change_weighted_rate": "1-month occupation change rate "
-        "(major occupation group, L1)",
-        "occ_2_change_weighted_rate": "1-month occupation change rate "
-        "(detailed occupation group, L2)",
-        "occ_3_change_weighted_rate": "1-month occupation change rate (occupation, L3)",
-        "occ_1_change_cond_weighted_rate": "1-month occupation change rate conditional "
-        "on employer change (major occupation group, L1)",
-        "occ_2_change_cond_weighted_rate": "1-month occupation change rate conditional "
-        "on employer change (detailed occupation group, L2)",
-        "occ_3_change_cond_weighted_rate": "1-month occupation change rate conditional "
-        "on employer change (occupation, L3)",
+        "occupation_change_cond_weighted_rate": "1-month occupation change rate (self-reported) conditional on employer change",
+        "occ_1_change_weighted_rate": "1-month occupation change rate \n (major occupation group, L1)",
+        "occ_2_change_weighted_rate": "1-month occupation change rate \n (detailed occupation group, L2)",
+        "occ_3_change_weighted_rate": "1-month occupation change rate \n (occupation, L3)",
+        "occ_1_change_cond_weighted_rate": "1-month occupation change rate conditional on employer change \n (major occupation group, L1)",
+        "occ_2_change_cond_weighted_rate": "1-month occupation change rate conditional on employer change \n (detailed occupation group, L2)",
+        "occ_3_change_cond_weighted_rate": "1-month occupation change rate conditional on employer change \n (occupation, L3)",
     }
 
     ylims = {
-        "employer_change_rate": [0.0, 0.045, 0.005],
-        "occupation_change_rate": [0.0, 0.1, 0.02],
-        "occupation_change_cond_rate": [0.0, 0.1, 0.02],
+        "employer_change_rate": [0.0, 0.06, 0.01],
+        "occupation_change_rate": [0.0, 0.02, 0.005],
+        "occupation_change_cond_rate": [0.0, 1.0, 0.2],
         "occ_1_change_rate": [0.0, 0.1, 0.02],
         "occ_2_change_rate": [0.0, 0.1, 0.02],
         "occ_3_change_rate": [0.0, 0.1, 0.02],
         "occ_1_change_cond_rate": [0.0, 0.15, 0.05],
         "occ_2_change_cond_rate": [0.0, 0.15, 0.05],
         "occ_3_change_cond_rate": [0.0, 0.15, 0.05],
-        "employer_change_weighted_rate": [0.0, 0.045, 0.005],
-        "occupation_change_weighted_rate": [0.0, 0.1, 0.02],
-        "occupation_change_cond_weighted_rate": [0.0, 0.1, 0.02],
+        "employer_change_weighted_rate": [0.0, 0.06, 0.01],
+        "occupation_change_weighted_rate": [0.0, 0.02, 0.005],
+        "occupation_change_cond_weighted_rate": [0.0, 1.0, 0.2],
         "occ_1_change_weighted_rate": [0.0, 0.1, 0.02],
         "occ_2_change_weighted_rate": [0.0, 0.1, 0.02],
         "occ_3_change_weighted_rate": [0.0, 0.1, 0.02],
@@ -182,7 +173,7 @@ def _plot_line_charts(df_year, df_age, df_cohort, df_age_cohort):
 
         # by cohort
         data = df_cohort.loc[:, var]
-        data = data.drop(["before 1929"])
+        data = data.drop(["before 1929", "2000 and later"])
         params = {
             "legend": False,
             "xlabel": "birth year",
@@ -194,11 +185,41 @@ def _plot_line_charts(df_year, df_age, df_cohort, df_age_cohort):
         }
         plot_line(data, params)
 
+        # by age (5 years) and year
+        data = df_age_year.loc[:, var]
+        data = data.unstack(level=0)
+        data = data.drop(columns=["19 and younger", "65 and older"])
+        params = {
+            "legend": True,
+            "xlabel": "year",
+            "xticks": (np.arange(data.shape[0]) + 1, list(data.index)),
+            "ylabel": ylabels[var],
+            "ylim": ylims[var],
+            "title": f"{ylabels[var]} by age over time",
+            "outpath": BLD / "figures" / "plots" / f"cps_{var}_agegroup_5_year.pdf",
+        }
+        plot_line(data, params)
+
+        # by cohort (10 years) and year
+        data = df_cohort_year.loc[:, var]
+        data = data.unstack(level=0)
+        data = data.drop(columns=["before 1929", "2000 and later"])
+        params = {
+            "legend": True,
+            "xlabel": "year",
+            "xticks": (np.arange(data.shape[0]) + 1, list(data.index)),
+            "ylabel": ylabels[var],
+            "ylim": ylims[var],
+            "title": f"{ylabels[var]} by birth year over time",
+            "outpath": BLD / "figures" / "plots" / f"cps_{var}_cohort_10_year.pdf",
+        }
+        plot_line(data, params)
+
         # by age (5 years) and cohort (10 years)
         data = df_age_cohort.loc[:, var]
         data = data.unstack(level=1)
         data = data.drop(["19 and younger", "65 and older"])
-        data = data.drop(columns=["before 1929"])
+        data = data.drop(columns=["before 1929", "2000 and later"])
         params = {
             "legend": True,
             "xlabel": "age group",
@@ -234,6 +255,22 @@ if __name__ == "__main__":
         DAT / "cps" / "basic_monthly" / "results" / "cps_transitions_rates_cohort.csv",
         index_col=[0],
     )
+    df_age_year = pd.read_csv(
+        DAT
+        / "cps"
+        / "basic_monthly"
+        / "results"
+        / "cps_transitions_rates_age_year.csv",
+        index_col=[0, 1],
+    )
+    df_cohort_year = pd.read_csv(
+        DAT
+        / "cps"
+        / "basic_monthly"
+        / "results"
+        / "cps_transitions_rates_cohort_year.csv",
+        index_col=[0, 1],
+    )
     df_age_cohort = pd.read_csv(
         DAT
         / "cps"
@@ -243,4 +280,6 @@ if __name__ == "__main__":
         index_col=[0, 1],
     )
 
-    _plot_line_charts(df_year, df_age, df_cohort, df_age_cohort)
+    _plot_line_charts(
+        df_year, df_age, df_cohort, df_age_year, df_cohort_year, df_age_cohort
+    )
