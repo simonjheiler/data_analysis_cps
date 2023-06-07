@@ -81,19 +81,15 @@ def _get_rates(df, varlist):
 
 
 def _remove_data(df, dates_exclude):
+
     for var in dates_exclude.keys():
+        df.loc[df.loc[:, "time_unit"].isin(dates_exclude[var]), f"base_{var}"] = np.nan
+        df.loc[df.loc[:, "time_unit"].isin(dates_exclude[var]), f"{var}"] = np.nan
         df.loc[
-            df.loc[:, "time_unit"].isin(dates_exclude[var]), f"{var}_change"
+            df.loc[:, "time_unit"].isin(dates_exclude[var]), f"base_{var}_weighted"
         ] = np.nan
         df.loc[
-            df.loc[:, "time_unit"].isin(dates_exclude[var]), f"{var}_change_cond"
-        ] = np.nan
-        df.loc[
-            df.loc[:, "time_unit"].isin(dates_exclude[var]), f"{var}_change_weighted"
-        ] = np.nan
-        df.loc[
-            df.loc[:, "time_unit"].isin(dates_exclude[var]),
-            f"{var}_change_cond_weighted",
+            df.loc[:, "time_unit"].isin(dates_exclude[var]), f"{var}_weighted"
         ] = np.nan
 
     return df
@@ -111,14 +107,22 @@ def _aggregate_data(df_in):
         df_in["birthyear"], cohort_10_thresholds, right=True, labels=cohort_10_labels
     )
 
-    date_start = pd.to_datetime("1995-09")
+    # duplicate base_j2j column for all relevant variables
+    for employer_key in ["same", "different"]:
+        for occupation_key in ["same", "different"]:
+            df_in.loc[
+                :, f"base_j2j_{employer_key}_employer_{occupation_key}_occupation"
+            ] = df_in.base_j2j
+            df_in.loc[
+                :,
+                f"base_j2j_{employer_key}_employer_{occupation_key}_occupation_weighted",
+            ] = df_in.base_j2j_weighted
+
+    date_start = pd.to_datetime("1996-01")
     date_end = pd.to_datetime("2019-12")
 
-    # date_occ88_stop = pd.to_datetime("2011-11")
-    # date_occ10_start = pd.to_datetime("2011-12")
-
     dates_exclude = {
-        "occ_1": [
+        "occ_1_change": [
             pd.to_datetime("2002-12"),
             pd.to_datetime("2004-04"),
             pd.to_datetime("2004-12"),
@@ -127,7 +131,7 @@ def _aggregate_data(df_in):
             pd.to_datetime("2012-04"),
             pd.to_datetime("2015-05"),
         ],
-        "occ_2": [
+        "occ_2_change": [
             pd.to_datetime("1997-12"),
             pd.to_datetime("2002-12"),
             pd.to_datetime("2004-04"),
@@ -137,7 +141,7 @@ def _aggregate_data(df_in):
             pd.to_datetime("2012-12"),
             pd.to_datetime("2015-05"),
         ],
-        "occ_3": [
+        "occ_3_change": [
             pd.to_datetime("2002-12"),
             pd.to_datetime("2004-04"),
             pd.to_datetime("2010-12"),
@@ -145,6 +149,70 @@ def _aggregate_data(df_in):
             pd.to_datetime("2013-12"),
             pd.to_datetime("2015-05"),
             pd.to_datetime("2019-12"),
+        ],
+        "occ_1_change_cond": [
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2004-12"),
+            pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-04"),
+            pd.to_datetime("2015-05"),
+        ],
+        "occ_2_change_cond": [
+            pd.to_datetime("1997-12"),
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-04"),
+            pd.to_datetime("2012-12"),
+            pd.to_datetime("2015-05"),
+        ],
+        "occ_3_change_cond": [
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-12"),
+            pd.to_datetime("2013-12"),
+            pd.to_datetime("2015-05"),
+            pd.to_datetime("2019-12"),
+        ],
+        "j2j_same_employer_same_occupation": [
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2004-12"),
+            pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-04"),
+            pd.to_datetime("2015-05"),
+        ],
+        "j2j_same_employer_different_occupation": [
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2004-12"),
+            pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-04"),
+            pd.to_datetime("2015-05"),
+        ],
+        "j2j_different_employer_same_occupation": [
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2004-12"),
+            pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-04"),
+            pd.to_datetime("2015-05"),
+        ],
+        "j2j_different_employer_different_occupation": [
+            pd.to_datetime("2002-12"),
+            pd.to_datetime("2004-04"),
+            pd.to_datetime("2004-12"),
+            pd.to_datetime("2009-12"),
+            pd.to_datetime("2010-12"),
+            pd.to_datetime("2012-04"),
+            pd.to_datetime("2015-05"),
         ],
     }
 
@@ -160,6 +228,7 @@ def _aggregate_data(df_in):
     # taking time averages for calendar years
     df_year = df_in.groupby(["time_unit", "year"]).sum()
     df_year = df_year.reset_index()
+    df_year = _remove_data(df_year, dates_exclude)
     df_year = df_year.drop(columns=["age", "birthyear", "time_unit"])
     df_year = df_year.groupby("year").mean()
 
@@ -167,6 +236,7 @@ def _aggregate_data(df_in):
     # taking time averages over entire period
     df_age = df_in.groupby(["time_unit", "agegroup_5"]).sum()
     df_age = df_age.reset_index()
+    df_age = _remove_data(df_age, dates_exclude)
     df_age = df_age.drop(columns=["age", "birthyear", "year"])
     df_age = df_age.groupby("agegroup_5").mean()
 
@@ -174,6 +244,7 @@ def _aggregate_data(df_in):
     # taking time averages over entire period
     df_cohort = df_in.groupby(["time_unit", "cohort_10"]).sum()
     df_cohort = df_cohort.reset_index()
+    df_cohort = _remove_data(df_cohort, dates_exclude)
     df_cohort = df_cohort.drop(columns=["age", "birthyear", "year"])
     df_cohort = df_cohort.groupby("cohort_10").mean()
 
@@ -181,13 +252,15 @@ def _aggregate_data(df_in):
     # taking time averages for calendar years
     df_age_year = df_in.groupby(["time_unit", "year", "agegroup_5"]).sum()
     df_age_year = df_age_year.reset_index()
+    df_age_year = _remove_data(df_age_year, dates_exclude)
     df_age_year = df_age_year.drop(columns=["age", "birthyear"])
     df_age_year = df_age_year.groupby(["agegroup_5", "year"]).mean()
 
-    # aggregate by cohort by first taking sums over cohorts and then
-    # taking time averages over entire period
+    # aggregate by cohort and year by first taking sums over cohorts and then
+    # taking time averages for calendar years
     df_cohort_year = df_in.groupby(["time_unit", "year", "cohort_10"]).sum()
     df_cohort_year = df_cohort_year.reset_index()
+    df_cohort_year = _remove_data(df_cohort_year, dates_exclude)
     df_cohort_year = df_cohort_year.drop(columns=["age", "birthyear"])
     df_cohort_year = df_cohort_year.groupby(["cohort_10", "year"]).mean()
 
@@ -195,6 +268,7 @@ def _aggregate_data(df_in):
     # groups and cohorts and then taking time averages over entire period
     df_age_cohort = df_in.groupby(["time_unit", "agegroup_5", "cohort_10"]).sum()
     df_age_cohort = df_age_cohort.reset_index()
+    df_age_cohort = _remove_data(df_age_cohort, dates_exclude)
     df_age_cohort = df_age_cohort.drop(columns=["age", "birthyear", "year"])
     df_age_cohort = df_age_cohort.groupby(["agegroup_5", "cohort_10"]).mean()
 
@@ -212,6 +286,10 @@ def _aggregate_data(df_in):
         "occ_2_change_cond",
         "occ_3_change",
         "occ_3_change_cond",
+        "j2j_same_employer_same_occupation",
+        "j2j_same_employer_different_occupation",
+        "j2j_different_employer_same_occupation",
+        "j2j_different_employer_different_occupation",
     ]
     varlist_rates = varlist_rates + [f"{var}_weighted" for var in varlist_rates]
 

@@ -217,20 +217,20 @@ def _join_transitions(df_from, df_to, lag):
             suffixes=("_from", "_to"),
         )
 
-    # calculate booleans for separations, job finding, labor market exit,
-    # labor market entry, employer change (self-reported) occupation change
-    # (self-reported), occupation change based on occupation code (level 1, 2,
-    # and 3) and occupation change based on occupation code (level 1, 2,
-    # and 3) conditional on employer change (self-reported)
+        # calculate booleans for separations, job finding, labor market exit,
+        # labor market entry, employer change (self-reported) occupation change
+        # (self-reported), occupation change based on occupation code (level 1, 2,
+        # and 3) and occupation change based on occupation code (level 1, 2,
+        # and 3) conditional on employer change (self-reported)
 
-    # separation events:
-    #   - base is all workers that are currently employed and where next period
-    #     labor force status is not unknown
-    #   - event is a transition from being employed to being unemployed
-    out_df.loc[:, "base_separation"] = np.logical_and(
-        out_df.loc[:, "labor_force_status_reduced_from"] == "employed",
-        ~out_df.loc[:, "labor_force_status_reduced_to"].isna(),
-    )
+        # separation events:
+        #   - base is all workers that are currently employed and where next period
+        #     labor force status is not unknown
+        #   - event is a transition from being employed to being unemployed
+        out_df.loc[:, "base_separation"] = np.logical_and(
+            out_df.loc[:, "labor_force_status_reduced_from"] == "employed",
+            ~out_df.loc[:, "labor_force_status_reduced_to"].isna(),
+        )
     out_df.loc[:, "separation"] = np.logical_and(
         out_df["labor_force_status_reduced_from"] == "employed",
         out_df["labor_force_status_reduced_to"] == "unemployed",
@@ -387,6 +387,69 @@ def _join_transitions(df_from, df_to, lag):
             != out_df.loc[:, f"occupation_code_1_l{level}_to"],
         )
 
+    # combinations of occupation change (based on occupation codes) and employer change
+    # (self-reported), i.e.
+    #   - same employer, same occupation
+    #   - same employer, different occupation
+    #   - different employer, same occupation
+    #   - different employer, different occupation
+    #
+    #   - base is all workers that have reported ("YES" or "NO") on "same employer" questions
+    #     and that are employed in both periods and where occupation codes are not
+    #     unknown for both periods
+    #   - events are
+    #       + reporting "YES" on "same employer" question and being employed in both periods
+    #         and the occupation codes being the same for both periods
+    #       + reporting "YES" on "same employer" question and being employer in both periods
+    #         and the occupation codes being not the same for both periods
+    #       + reporting "NO" on "same employer" question and being employed in both periods
+    #         and the occupation codes being the same for both periods
+    #       + reporting "NO" on "same employer" question and being employer in both periods
+    #         and the occupation codes being not the same for both periods
+    out_df.loc[:, "base_j2j"] = np.logical_and(
+        out_df.loc[:, "base_employer_change"], out_df.loc[:, "base_occ_1_change"]
+    )
+    out_df.loc[:, "j2j_same_employer_same_occupation"] = np.logical_and(
+        out_df.loc[:, "base_j2j"],
+        np.logical_and(
+            out_df.loc[:, "same_employer"] == "YES",
+            (
+                out_df.loc[:, "occupation_code_1_l1_from"]
+                == out_df.loc[:, "occupation_code_1_l1_to"]
+            ),
+        ),
+    )
+    out_df.loc[:, "j2j_same_employer_different_occupation"] = np.logical_and(
+        out_df.loc[:, "base_j2j"],
+        np.logical_and(
+            out_df.loc[:, "same_employer"] == "YES",
+            (
+                out_df.loc[:, "occupation_code_1_l1_from"]
+                != out_df.loc[:, "occupation_code_1_l1_to"]
+            ),
+        ),
+    )
+    out_df.loc[:, "j2j_different_employer_same_occupation"] = np.logical_and(
+        out_df.loc[:, "base_j2j"],
+        np.logical_and(
+            out_df.loc[:, "same_employer"] == "NO",
+            (
+                out_df.loc[:, "occupation_code_1_l1_from"]
+                == out_df.loc[:, "occupation_code_1_l1_to"]
+            ),
+        ),
+    )
+    out_df.loc[:, "j2j_different_employer_different_occupation"] = np.logical_and(
+        out_df.loc[:, "base_j2j"],
+        np.logical_and(
+            out_df.loc[:, "same_employer"] == "NO",
+            (
+                out_df.loc[:, "occupation_code_1_l1_from"]
+                != out_df.loc[:, "occupation_code_1_l1_to"]
+            ),
+        ),
+    )
+
     # remove unused columns and relabel changed column to original names
     out_df = out_df.drop(columns=["labor_force_status_reduced_to"])
     out_df = out_df.rename(
@@ -433,6 +496,11 @@ def _compile_switch_rates(in_data, out_path):
         "base_occ_1_change_cond",
         "base_occ_2_change_cond",
         "base_occ_3_change_cond",
+        "base_j2j",
+        "j2j_same_employer_same_occupation",
+        "j2j_same_employer_different_occupation",
+        "j2j_different_employer_same_occupation",
+        "j2j_different_employer_different_occupation",
     ]
 
     cols_sum_weighted = [f"{col}_weighted" for col in cols_sum]
@@ -533,7 +601,7 @@ def _compile_switch_rates(in_data, out_path):
 
 if __name__ == "__main__":
 
-    date_start = "1994-01"
+    date_start = "1996-01"
     # date_end = "2010-01"
     # date_start = datetime.strptime(
     #     data_instructions[survey_name]["date_start"],
