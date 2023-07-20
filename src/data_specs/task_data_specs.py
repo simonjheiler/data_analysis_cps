@@ -1,9 +1,7 @@
-"""Create data specs from data description and instructions.
-
-
-"""
+"""Create data specs from data description and instructions."""
 import json
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 import pytask
@@ -11,18 +9,16 @@ import pytask
 from src.config import SRC
 from src.data_specs._get_data_specs import _write_data_specs_cps
 
-cps_data_instructions = json.load(
-    open(SRC / "data_specs" / "cps_data_instructions.json")
-)
+with Path.open(SRC / "data_specs" / "cps_data_instructions.json") as file:
+    cps_data_instructions = json.load(file)
 
 surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
 
-RERUN_DATA_SPECS = True
+DONT_RERUN_DATA_SPECS = False
 
 prefixes = {}
 file_lists = {}
 for survey in surveys:
-
     # load info from data instructions
     date_start = datetime.strptime(
         cps_data_instructions[survey]["date_start"],
@@ -48,42 +44,42 @@ for survey in surveys:
     # store list of selected files in dict
     file_lists[survey] = file_list
 
+    # compile kwargs
+    kwargs = {
+        "depends_on": {
+            "instructions": SRC / "data_specs" / "cps_data_instructions.json",
+            "description": SRC / "data_specs" / f"cps_data_description_{survey}.json",
+        },
+        "produces": {
+            file: SRC
+            / "data_specs"
+            / "data_specs"
+            / survey
+            / f"{cps_data_instructions[survey]['prefix']}_{file}.json"
+            for file in file_lists[survey]
+        },
+        "survey_name": survey,
+    }
 
-@pytask.mark.skipif(
-    RERUN_DATA_SPECS, reason="Skip creation of specifications for data extraction."
-)
-@pytask.mark.parametrize(
-    "depends_on, produces, survey_name",
-    [
-        (
-            {
-                "instructions": SRC / "data_specs" / "cps_data_instructions.json",
-                "description": SRC
-                / "data_specs"
-                / f"cps_data_description_{survey}.json",
-            },
-            {
-                file: SRC
-                / "data_specs"
-                / "data_specs"
-                / survey
-                / f"{cps_data_instructions[survey]['prefix']}_{file}.json"
-                for file in file_lists[survey]
-            },
-            survey,
-        )
-        for survey in surveys
-    ],
-)
-def task_get_data_specs(depends_on, produces, survey_name):
+    @pytask.mark.skipif(
+        DONT_RERUN_DATA_SPECS,
+        reason="Skip creation of specifications for data extraction.",
+    )
+    @pytask.mark.data_prep
+    @pytask.mark.task(id=survey, kwargs=kwargs)
+    def task_get_data_specs(depends_on, produces, survey_name):
+        """Task file to generate data specification files."""
+        # get data specs
+        with Path.open(depends_on["instructions"]) as file:
+            instructions_all = json.load(file)
+        instructions = instructions_all[survey_name]
 
-    # get data specs
-    instructions = json.load(open(depends_on["instructions"]))[survey_name]
-    description = json.load(open(depends_on["description"]))
+        with Path.open(depends_on["description"]) as file:
+            description = json.load(file)
 
-    data_specs = _write_data_specs_cps(instructions, description)
+        data_specs = _write_data_specs_cps(instructions, description)
 
-    # write individual specification files to build directory
-    for dataset in data_specs:
-        with open(produces[dataset], "w") as outfile:
-            json.dump(data_specs[dataset], outfile, ensure_ascii=False, indent=2)
+        # write individual specification files to build directory
+        for dataset in data_specs:
+            with Path.open(produces[dataset], "w") as outfile:
+                json.dump(data_specs[dataset], outfile, ensure_ascii=False, indent=2)

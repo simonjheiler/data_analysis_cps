@@ -16,6 +16,8 @@
     "citizenship_status": "prcitshp",
     "earnings_weekly": "a_grswk",
     "hours_worked": "a_hrs1",
+    "unemployment_comp": "uc_val",
+    "unemployment_duration": "a_wkslk",
     "weight_personal": "a_fnlwgt",
     "weight_earnings": "a_ernlwt",
     "weight_supplement": "marsupwt"

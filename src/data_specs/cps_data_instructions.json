@@ -52,6 +52,8 @@
       "citizenship_status",
       "earnings_weekly",
       "hours_worked",
+      "unemployment_comp",
+      "unemployment_duration",
       "weight_personal",
       "weight_earnings",
       "weight_supplement"

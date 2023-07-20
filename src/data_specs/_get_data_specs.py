@@ -1,28 +1,32 @@
 import json
+from pathlib import Path
 
 import pandas as pd
 
 from src.config import SRC
-
 
 #####################################################
 # PARAMETERS
 #####################################################
 
 # load data description and data specs
-cps_data_instructions = json.load(
-    open(SRC / "data_specs" / "cps_data_instructions.json")
-)
+with Path.open(SRC / "data_specs" / "cps_data_instructions.json") as file:
+    cps_data_instructions = json.load(file)
+with Path.open(SRC / "data_specs" / "cps_data_description_basic_monthly.json") as file:
+    cps_data_description_basic_monthly = json.load(file)
+with Path.open(
+    SRC / "data_specs" / "cps_data_description_supplement_asec.json",
+) as file:
+    cps_data_description_supplement_asec = json.load(file)
+with Path.open(
+    SRC / "data_specs" / "cps_data_description_supplement_tenure.json",
+) as file:
+    cps_data_description_supplement_tenure = json.load(file)
+
 cps_data_descriptions = {
-    "basic_monthly": json.load(
-        open(SRC / "data_specs" / "cps_data_description_basic_monthly.json")
-    ),
-    "supplement_asec": json.load(
-        open(SRC / "data_specs" / "cps_data_description_supplement_asec.json")
-    ),
-    "supplement_tenure": json.load(
-        open(SRC / "data_specs" / "cps_data_description_supplement_tenure.json")
-    ),
+    "basic_monthly": cps_data_description_basic_monthly,
+    "supplement_asec": cps_data_description_supplement_asec,
+    "supplement_tenure": cps_data_description_supplement_tenure,
 }
 
 
@@ -32,16 +36,12 @@ cps_data_descriptions = {
 
 
 def _filter_vardict_cps(vardict, varlist):
-
-    out = {
-        key: value for (key, value) in vardict.items() if key in varlist and value != ""
-    }
-
-    return out
+    """Filter variable dictionary for entries included in list."""
+    return {key: value for (key, value) in vardict.items() if key in varlist and value}
 
 
 def _write_data_specs_cps(instructions, description):
-
+    """Compile specifications to extract data from CPS raw data files."""
     # load instructions
     date_start = instructions["date_start"]
     date_end = instructions["date_end"]
@@ -54,16 +54,17 @@ def _write_data_specs_cps(instructions, description):
     specs_out = pd.DataFrame(
         index=pd.date_range(start=date_start, end=date_end, freq=frequency)
         .strftime(date_format)
-        .tolist()
+        .tolist(),
     )
 
     data_desc = pd.DataFrame.from_dict(description, orient="index")
     data_desc["period"] = pd.to_datetime(data_desc.index)
     data_desc["var_dict"] = data_desc["var_dict"].apply(
-        _filter_vardict_cps, args=[var_list]
+        _filter_vardict_cps,
+        args=[var_list],
     )
 
-    specs_out.loc[:, "in_dir"] = prefix + "_" + specs_out.index.values
+    specs_out.loc[:, "in_dir"] = prefix + "_" + specs_out.index.to_numpy()
     if prefix == "cpsb":
         specs_out.loc[:, "in_file"] = (
             pd.to_datetime(specs_out.index).strftime("%b%y").str.lower() + "pub"
@@ -86,7 +87,6 @@ def _write_data_specs_cps(instructions, description):
 #####################################################
 
 if __name__ == "__main__":
-
     surveys = ["basic_monthly", "supplement_asec", "supplement_tenure"]
 
     for survey_name in surveys:
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
         # write individual specification files to build directory
         for dataset in data_specs:
-            with open(
+            with Path.open(
                 SRC
                 / "data_specs"
                 / "data_specs"

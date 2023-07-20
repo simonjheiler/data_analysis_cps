@@ -2,3 +2,29 @@
 infer_latex_dependencies = "true"
 stata_keep_log = "false"
 check_casing_of_paths = "false"
+
+[tool.pytask.ini_options.markers]
+wip = "Tasks that are work-in-progress."
+data_prep = "Tasks for preparing the data extraction."
+data_get = "Tasks for extracting and formatting data."
+output = "Tasks for producing figures and tables."
+
+[tool.ruff]
+target-version = "py311"
+select = ["ALL"]
+fix = true
+extend-ignore = [
+    "S101",  # Use of `assert` detected.
+    "ANN",  # Missing type annotations
+]
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["D", "PD011"]
+"task_*.py" = ["ANN"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.yamlfix]
+line_length = 88
+none_representation = "null"
