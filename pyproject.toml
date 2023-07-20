@@ -6,7 +6,11 @@ check_casing_of_paths = "false"
 [tool.pytask.ini_options.markers]
 wip = "Tasks that are work-in-progress."
 data_prep = "Tasks for preparing the data extraction."
-data_get = "Tasks for extracting and formatting data."
+data_get_basic_monthly = "Tasks for extracting raw data from CPS basic monthly files."
+data_get_supplement_asec = "Tasks for extracting raw data from CPS ASEC supplement files."
+data_get_supplement_tenure = "Tasks for extracting raw data from CPS tenure supplement files."
+data_format = "Tasks for formatting data raw data."
+data_compile = "Tasks for compiling datasets from formatted data."
 output = "Tasks for producing figures and tables."
 
 [tool.ruff]
